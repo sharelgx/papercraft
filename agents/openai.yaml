@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude Paper Web Design"
+  short_description: "Claude paper web visual design"
+  default_prompt: "Design a web page or app screen using the Claude paper visual language: warm paper backgrounds, serif editorial headings, clay and olive accents, fine borders, calm spacing, and practical interactive controls."
