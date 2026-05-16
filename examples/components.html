@@ -547,10 +547,14 @@ const I18N = {
     ppt_item_1: '标题页 / 章节页',
     ppt_item_2: '双栏内容页',
     ppt_item_3: '指标卡 + 图表页',
-    ppt_item_4: '图文混排页',
-    ppt_item_5: '代码展示页',
-    ppt_item_6: '引用页 / 结论页',
-    ppt_item_7: '时间线 / 路线图页',
+    ppt_item_4: '逻辑关系图页',
+    ppt_item_5: '趋势图表页',
+    ppt_item_6: '报表摘要页',
+    ppt_item_7: '数据表格页',
+    ppt_item_8: '图文混排页',
+    ppt_item_9: '代码展示页',
+    ppt_item_10: '引用页 / 结论页',
+    ppt_item_11: '时间线 / 路线图页',
     ppt_notes_title: '演讲者备注',
     ppt_notes_body: 'HTML deck 中备注区应该独立于 slide canvas；PPTX 中可转为 speaker notes。',
     // mobile
@@ -689,10 +693,14 @@ const I18N = {
     ppt_item_1: 'Title / section slide',
     ppt_item_2: 'Two-column content slide',
     ppt_item_3: 'Metric cards + chart slide',
-    ppt_item_4: 'Mixed image + text slide',
-    ppt_item_5: 'Code display slide',
-    ppt_item_6: 'Quote / conclusion slide',
-    ppt_item_7: 'Timeline / roadmap slide',
+    ppt_item_4: 'Logic map slide',
+    ppt_item_5: 'Trend chart slide',
+    ppt_item_6: 'Report summary slide',
+    ppt_item_7: 'Data table slide',
+    ppt_item_8: 'Mixed image + text slide',
+    ppt_item_9: 'Code display slide',
+    ppt_item_10: 'Quote / conclusion slide',
+    ppt_item_11: 'Timeline / roadmap slide',
     ppt_notes_title: 'Speaker Notes',
     ppt_notes_body: 'In HTML decks, notes should stay outside the slide canvas; in PPTX, map them to speaker notes.',
     mobile_title: 'Mobile App Shell',
@@ -1178,6 +1186,10 @@ function renderPpt() {
           <li>${t('ppt_item_5')}</li>
           <li>${t('ppt_item_6')}</li>
           <li>${t('ppt_item_7')}</li>
+          <li>${t('ppt_item_8')}</li>
+          <li>${t('ppt_item_9')}</li>
+          <li>${t('ppt_item_10')}</li>
+          <li>${t('ppt_item_11')}</li>
         </ul>
       </div>
       <div class="spec-card">

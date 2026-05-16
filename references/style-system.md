@@ -387,6 +387,10 @@ Core slide components:
 - **Title / section slide:** centered claim, short supporting sentence, 2-4 metadata pills.
 - **Two-column slide:** left conclusion, right evidence or paired argument blocks.
 - **Metric slide:** 2-4 KPI cards plus one SVG/CSS chart; clay for primary series, olive for secondary.
+- **Logic relationship map:** 3-stage input/process/output or cause/mechanism/result layout, with restrained arrows and grouped nodes.
+- **Trend chart slide:** one large SVG/CSS chart plus compact side stats for anomalies, contributors, or next actions.
+- **Report summary slide:** KPI strip, key insights, and risks/actions; do not paste raw backend dashboards into a slide.
+- **Data table slide:** 4-6 columns maximum, status chips for health/risk, and only rows that support the claim.
 - **Mixed image-text slide:** image/product state/process diagram on one side, 2-3 evidence points on the other; stack cleanly on narrow screens.
 - **Code display slide:** dark code panel with monospace text, short side callouts, and 12-18 lines of code maximum.
 - **Quote slide:** one large serif quote, quiet attribution, no decorative quotation overload.
@@ -442,7 +446,7 @@ Main interactive surface fills the viewport. Supporting notes and controls sit a
 First viewport: product signal + clear CTA. Serif heading at `--text-2xl` or `--text-3xl`. Avoid generic AI-gradient hero layouts. Use editorial warmth and confident hierarchy.
 
 **Presentation / PPT:**
-One slide = one claim. Use title, two-column, metric/chart, mixed image-text, code display, quote, timeline, and closing layouts rather than one giant mixed slide. Keep presenter notes and thumbnails outside the slide canvas in HTML demos. The slide canvas must be constrained by both available width and height so the deck never clips content in normal browser chrome.
+One slide = one claim. Use title, two-column, metric/chart, logic map, trend chart, report summary, data table, mixed image-text, code display, quote, timeline, and closing layouts rather than one giant mixed slide. Keep presenter notes and thumbnails outside the slide canvas in HTML demos. The slide canvas must be constrained by both available width and height so the deck never clips content in normal browser chrome.
 
 **Mobile app:**
 Start from the phone workflow: top app bar, primary content, bottom navigation or bottom sheet. Replace dense tables with list cards and detail sheets. Validate at 390px and at a narrower 360px width.
