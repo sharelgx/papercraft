@@ -387,6 +387,8 @@ Core slide components:
 - **Title / section slide:** centered claim, short supporting sentence, 2-4 metadata pills.
 - **Two-column slide:** left conclusion, right evidence or paired argument blocks.
 - **Metric slide:** 2-4 KPI cards plus one SVG/CSS chart; clay for primary series, olive for secondary.
+- **Mixed image-text slide:** image/product state/process diagram on one side, 2-3 evidence points on the other; stack cleanly on narrow screens.
+- **Code display slide:** dark code panel with monospace text, short side callouts, and 12-18 lines of code maximum.
 - **Quote slide:** one large serif quote, quiet attribution, no decorative quotation overload.
 - **Timeline / roadmap:** 3-5 milestones on one axis; each milestone gets a short label and one sentence.
 - **Presenter notes:** outside the 16:9 canvas in HTML; never visible inside the slide unless requested.
@@ -436,7 +438,7 @@ Main interactive surface fills the viewport. Supporting notes and controls sit a
 First viewport: product signal + clear CTA. Serif heading at `--text-2xl` or `--text-3xl`. Avoid generic AI-gradient hero layouts. Use editorial warmth and confident hierarchy.
 
 **Presentation / PPT:**
-One slide = one claim. Use title, two-column, metric/chart, quote, timeline, and closing layouts rather than one giant mixed slide. Keep presenter notes and thumbnails outside the slide canvas in HTML demos.
+One slide = one claim. Use title, two-column, metric/chart, mixed image-text, code display, quote, timeline, and closing layouts rather than one giant mixed slide. Keep presenter notes and thumbnails outside the slide canvas in HTML demos. The slide canvas must be constrained by both available width and height so the deck never clips content in normal browser chrome.
 
 **Mobile app:**
 Start from the phone workflow: top app bar, primary content, bottom navigation or bottom sheet. Replace dense tables with list cards and detail sheets. Validate at 390px and at a narrower 360px width.

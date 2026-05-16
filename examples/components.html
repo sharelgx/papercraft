@@ -543,12 +543,14 @@ const I18N = {
     tab_timeline: '时间线',
     // ppt
     ppt_title: '16:9 幻灯片画布',
-    ppt_body: '用于汇报、课程、复盘和产品策略。每页只承载一个判断，备注和缩略图放在画布外。',
+    ppt_body: '用于汇报、课程、复盘和产品策略。每页只承载一个判断，备注和缩略图放在画布外，画布需同时适配可用宽高。',
     ppt_item_1: '标题页 / 章节页',
     ppt_item_2: '双栏内容页',
     ppt_item_3: '指标卡 + 图表页',
-    ppt_item_4: '引用页 / 结论页',
-    ppt_item_5: '时间线 / 路线图页',
+    ppt_item_4: '图文混排页',
+    ppt_item_5: '代码展示页',
+    ppt_item_6: '引用页 / 结论页',
+    ppt_item_7: '时间线 / 路线图页',
     ppt_notes_title: '演讲者备注',
     ppt_notes_body: 'HTML deck 中备注区应该独立于 slide canvas；PPTX 中可转为 speaker notes。',
     // mobile
@@ -680,12 +682,14 @@ const I18N = {
     tab_channels: 'Channels',
     tab_timeline: 'Timeline',
     ppt_title: '16:9 Slide Canvas',
-    ppt_body: 'For briefings, lessons, reviews, and product strategy. Each slide carries one claim; notes and thumbnails stay outside the canvas.',
+    ppt_body: 'For briefings, lessons, reviews, and product strategy. Each slide carries one claim; notes and thumbnails stay outside the canvas, and the stage must fit available width and height.',
     ppt_item_1: 'Title / section slide',
     ppt_item_2: 'Two-column content slide',
     ppt_item_3: 'Metric cards + chart slide',
-    ppt_item_4: 'Quote / conclusion slide',
-    ppt_item_5: 'Timeline / roadmap slide',
+    ppt_item_4: 'Mixed image + text slide',
+    ppt_item_5: 'Code display slide',
+    ppt_item_6: 'Quote / conclusion slide',
+    ppt_item_7: 'Timeline / roadmap slide',
     ppt_notes_title: 'Speaker Notes',
     ppt_notes_body: 'In HTML decks, notes should stay outside the slide canvas; in PPTX, map them to speaker notes.',
     mobile_title: 'Mobile App Shell',
@@ -1166,6 +1170,8 @@ function renderPpt() {
           <li>${t('ppt_item_3')}</li>
           <li>${t('ppt_item_4')}</li>
           <li>${t('ppt_item_5')}</li>
+          <li>${t('ppt_item_6')}</li>
+          <li>${t('ppt_item_7')}</li>
         </ul>
       </div>
       <div class="spec-card">

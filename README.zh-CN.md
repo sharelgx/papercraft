@@ -26,7 +26,7 @@ PagerCraft 是一个非官方的 Codex/Cursor Skill，用来设计 Claude paper 
 | `examples/report.html` | 分析报告：摘要指标、tab、SVG 趋势图、渠道表、时间线、JSON/Markdown 导出 |
 | `examples/landing.html` | 产品落地页：hero、功能区、流程、评价、价格、footer |
 | `examples/kanban.html` | Kanban 看板：4 列、卡片、标签/负责人/截止日期、移动弹窗、搜索和新增 |
-| `examples/presentation.html` | PPT 式演示稿：16:9 幻灯片、缩略图、标题/双栏/数据/引用/时间线组件、演讲备注、全屏 |
+| `examples/presentation.html` | PPT 式演示稿：自适应 16:9 舞台、缩略图、标题/双栏/数据/图文混排/代码/引用/时间线组件、演讲备注、全屏 |
 | `examples/mobile.html` | 手机端 App：设备外壳、顶部栏、底部导航、分段控件、列表卡片、底部面板、toast |
 | `examples/components.html` | 组件库展示：色彩、字体、间距、按钮、表单、表格、卡片、PPT/手机端组件和浮层 |
 
