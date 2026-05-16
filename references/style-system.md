@@ -396,6 +396,7 @@ Core slide components:
 - **Quote slide:** one large serif quote, quiet attribution, no decorative quotation overload.
 - **Timeline / roadmap:** 3-5 milestones on one axis; each milestone gets a short label and one sentence.
 - **Presenter notes:** outside the 16:9 canvas in HTML; never visible inside the slide unless requested.
+- **Transition effects:** directional slide enter for next/previous, subtle staged entrances for metrics, charts, tables, logic nodes, and code panels; respect `prefers-reduced-motion`.
 
 When building a real PPTX, keep a consistent master: title area, body grid, footer baseline, page number, and reusable color tokens. Avoid shrinking dense dashboard cards onto slides.
 
@@ -446,7 +447,7 @@ Main interactive surface fills the viewport. Supporting notes and controls sit a
 First viewport: product signal + clear CTA. Serif heading at `--text-2xl` or `--text-3xl`. Avoid generic AI-gradient hero layouts. Use editorial warmth and confident hierarchy.
 
 **Presentation / PPT:**
-One slide = one claim. Use title, two-column, metric/chart, logic map, trend chart, report summary, data table, mixed image-text, code display, quote, timeline, and closing layouts rather than one giant mixed slide. Keep presenter notes and thumbnails outside the slide canvas in HTML demos. The slide canvas must be constrained by both available width and height so the deck never clips content in normal browser chrome.
+One slide = one claim. Use title, two-column, metric/chart, logic map, trend chart, report summary, data table, mixed image-text, code display, quote, timeline, and closing layouts rather than one giant mixed slide. Keep presenter notes and thumbnails outside the slide canvas in HTML demos. Use restrained transition effects to clarify movement between slides, not to decorate. The slide canvas must be constrained by both available width and height so the deck never clips content in normal browser chrome.
 
 **Mobile app:**
 Start from the phone workflow: top app bar, primary content, bottom navigation or bottom sheet. Replace dense tables with list cards and detail sheets. Validate at 390px and at a narrower 360px width.

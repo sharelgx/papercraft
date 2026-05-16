@@ -149,13 +149,13 @@ Useful controls: editable text area, variable chips, sample selector, diff previ
 
 **Use for:** product strategy decks, lesson slides, investor/storytelling decks, project reviews, feature launch briefings.
 
-Structure: 16:9 slide canvas, thumbnail rail, active slide stage, presenter notes, page number/progress, optional fullscreen mode.
+Structure: 16:9 slide canvas, thumbnail rail, active slide stage, presenter notes, page number/progress, directional slide transitions, optional fullscreen mode.
 
 Useful controls: previous/next buttons, keyboard navigation, language toggle, fullscreen/presenter mode, copy/export slide outline.
 
 Core components: title slide, section divider, two-column argument slide, metric/chart slide, logic relationship map, trend chart slide, report summary slide, data table slide, mixed image-text slide, code display slide, quote slide, timeline/roadmap slide, closing slide.
 
-Example from this skill: `examples/presentation.html` — bilingual adaptive deck viewer with thumbnails, speaker notes, keyboard navigation, fullscreen mode, logic maps, charts, reports, tables, mixed-media slides, code slides, and reusable slide components.
+Example from this skill: `examples/presentation.html` — bilingual adaptive deck viewer with animated transitions, thumbnails, speaker notes, keyboard navigation, fullscreen mode, logic maps, charts, reports, tables, mixed-media slides, code slides, and reusable slide components.
 
 ---
 

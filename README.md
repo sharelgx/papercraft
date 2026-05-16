@@ -27,7 +27,7 @@ The `examples/` folder contains seven runnable single-file HTML demos — all su
 | `examples/report.html` | Analysis report — summary KPI strip, tabbed sections (overview/channels/timeline/raw), SVG trend chart, export to JSON/Markdown |
 | `examples/landing.html` | Product landing page — hero with HTML mockup, features, how-it-works, testimonials, pricing tiers, footer |
 | `examples/kanban.html` | Kanban board — 4 columns, 16 cards with labels/assignee/due date, move modal, label filter, search, add card |
-| `examples/presentation.html` | PPT-style deck viewer — adaptive 16:9 stage, thumbnails, title/two-column/data/logic-map/chart/report/table/mixed-media/code/quote/timeline components, keyboard navigation, presenter notes, fullscreen |
+| `examples/presentation.html` | PPT-style deck viewer — adaptive 16:9 stage, animated transitions, thumbnails, title/two-column/data/logic-map/chart/report/table/mixed-media/code/quote/timeline components, keyboard navigation, presenter notes, fullscreen |
 | `examples/mobile.html` | Mobile component kit — phone shell, app bar, bottom tabs, chips, lists, profile card, forms, switches, steppers, slider, bottom sheets, modal, toast, loading and empty states |
 | `examples/components.html` | Design system showcase — all 29 color tokens, typography scale, spacing scale, every component with all states, PPT/mobile component sections, live modal/drawer/toast demos |
 

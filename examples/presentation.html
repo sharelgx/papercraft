@@ -15,6 +15,7 @@
   --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
   --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --radius-sm:6px;--radius-md:8px;--radius-lg:10px;--shadow-sm:0 2px 6px rgba(23,23,22,.08);--shadow-md:0 6px 24px rgba(23,23,22,.12);
+  --ease-out:cubic-bezier(.16,1,.3,1);--ease-in-out:cubic-bezier(.65,0,.35,1);--dur-fast:160ms;--dur-base:260ms;--dur-slow:520ms;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
@@ -31,17 +32,18 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .lang-btn,.btn{border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-md);font-size:13px;height:32px;padding:0 10px}
 .lang-btn.active,.btn.primary{background:var(--clay-soft);border-color:var(--clay-border);color:var(--clay-dark);font-weight:700}
 .thumbs{display:flex;flex-direction:column;gap:9px}
-.thumb{width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:10px;transition:.2s}
-.thumb:hover{border-color:var(--line-strong);background:var(--paper-warm)}
-.thumb.active{border-color:var(--clay-border);box-shadow:inset 3px 0 0 var(--clay)}
+.thumb{width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:10px;transition:background var(--dur-base),border-color var(--dur-base),box-shadow var(--dur-base),transform var(--dur-base) var(--ease-out)}
+.thumb:hover{border-color:var(--line-strong);background:var(--paper-warm);transform:translateX(2px)}
+.thumb.active{border-color:var(--clay-border);box-shadow:inset 3px 0 0 var(--clay);transform:translateX(3px)}
 .thumb-no{font-family:var(--font-mono);font-size:11px;color:var(--faint);margin-bottom:5px}.thumb-title{font-size:12px;font-weight:700;line-height:1.35}
 .stage-wrap{min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .topbar{height:54px;flex:0 0 54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;background:rgba(250,249,245,.82);backdrop-filter:blur(10px)}
-.progress{height:5px;flex:0 0 5px;background:var(--paper-deep)}.progress-fill{height:100%;background:var(--clay);width:0;transition:width .2s}
+.progress{height:5px;flex:0 0 5px;background:var(--paper-deep)}.progress-fill{height:100%;background:var(--clay);width:0;transition:width var(--dur-slow) var(--ease-out)}
 .stage{flex:1;min-height:0;display:grid;place-items:center;padding:clamp(12px,2vw,26px);overflow:hidden}
 .slide{
   width:var(--slide-w,min(100%,1060px));height:var(--slide-h,auto);aspect-ratio:16/9;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-md);
   padding:clamp(30px,4.7vw,54px) clamp(34px,5.4vw,62px);display:none;overflow:hidden;position:relative;
+  will-change:transform,opacity;
 }
 .slide.active{display:flex;flex-direction:column}
 .slide:after{content:"";position:absolute;left:clamp(34px,5.4vw,62px);right:clamp(34px,5.4vw,62px);bottom:24px;height:1px;background:var(--line-faint)}
@@ -76,6 +78,18 @@ pre{margin:0;padding:16px 18px;font-family:var(--font-mono);font-size:clamp(11px
 .chart-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;align-items:stretch;flex:1;margin-top:14px;min-height:0}.chart-card{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper-warm);padding:14px;min-height:0}.line-chart{width:100%;height:100%}.chart-side{display:grid;gap:10px}.mini-stat{border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-lg);padding:12px}.mini-stat b{font-family:var(--font-serif);font-size:28px}.mini-stat span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
 .report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.report-card{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper-warm);padding:12px}.report-card b{font-family:var(--font-serif);font-size:25px}.report-card span{display:block;font-size:11px;color:var(--muted);margin-top:4px}.report-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;margin-top:14px}.report-panel{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);padding:13px}.report-panel h3{font-family:var(--font-serif);font-size:18px;margin-bottom:8px}.report-panel ul{padding-left:18px;color:var(--muted);font-size:13px;line-height:1.55}
 .data-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;font-size:13px}.data-table th{background:var(--paper-warm);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}.data-table td{padding:10px 12px;border-bottom:1px solid var(--line-faint)}.data-table tr:last-child td{border-bottom:0}.status-chip{display:inline-flex;border-radius:99px;padding:3px 8px;font-size:11px;border:1px solid var(--line);background:var(--paper-warm);color:var(--muted)}.status-chip.good{background:var(--olive-soft);border-color:var(--olive-border);color:var(--olive-dark)}.status-chip.warn{background:var(--amber-soft);border-color:#dfc48a;color:var(--amber)}
+.slide.enter-forward{animation:slideForward var(--dur-slow) var(--ease-out) both}.slide.enter-back{animation:slideBack var(--dur-slow) var(--ease-out) both}.slide.enter-soft{animation:slideSoft 420ms var(--ease-out) both}
+.slide.active .eyebrow,.slide.active .h1,.slide.active .h2,.slide.active .lead{animation:contentLift 520ms var(--ease-out) both}.slide.active .h1,.slide.active .h2{animation-delay:60ms}.slide.active .lead{animation-delay:120ms}
+.slide.active .pill,.slide.active .point,.slide.active .metric,.slide.active .logic-node,.slide.active .mini-stat,.slide.active .report-card,.slide.active .report-panel,.slide.active .mixed-item,.slide.active .callout,.slide.active .milestone{animation:itemRise 500ms var(--ease-out) both}
+.slide.active .pill:nth-child(1),.slide.active .point:nth-child(1),.slide.active .metric:nth-child(1),.slide.active .logic-node:nth-child(1),.slide.active .mini-stat:nth-child(1),.slide.active .report-card:nth-child(1),.slide.active .mixed-item:nth-child(1),.slide.active .callout:nth-child(1),.slide.active .milestone:nth-child(1){animation-delay:150ms}
+.slide.active .pill:nth-child(2),.slide.active .point:nth-child(2),.slide.active .metric:nth-child(2),.slide.active .logic-node:nth-child(2),.slide.active .mini-stat:nth-child(2),.slide.active .report-card:nth-child(2),.slide.active .mixed-item:nth-child(2),.slide.active .callout:nth-child(2),.slide.active .milestone:nth-child(2){animation-delay:210ms}
+.slide.active .pill:nth-child(3),.slide.active .point:nth-child(3),.slide.active .metric:nth-child(3),.slide.active .mini-stat:nth-child(3),.slide.active .report-card:nth-child(3),.slide.active .mixed-item:nth-child(3),.slide.active .callout:nth-child(3),.slide.active .milestone:nth-child(3){animation-delay:270ms}
+.slide.active .pill:nth-child(4),.slide.active .point:nth-child(4),.slide.active .report-card:nth-child(4),.slide.active .milestone:nth-child(4){animation-delay:330ms}
+.slide.active .bar{transform-origin:bottom;animation:barGrow 720ms var(--ease-out) both}.slide.active .bar:nth-child(2){animation-delay:80ms}.slide.active .bar:nth-child(3){animation-delay:140ms}.slide.active .bar:nth-child(4){animation-delay:200ms}
+.slide.active .logic-arrow{transform-origin:left;animation:arrowDraw 620ms var(--ease-out) both;animation-delay:260ms}.slide.active .logic-arrows:nth-of-type(4) .logic-arrow{animation-delay:380ms}
+.slide.active .line-chart path{stroke-dasharray:900;stroke-dashoffset:900;animation:lineDraw 900ms var(--ease-out) forwards}.slide.active .line-chart path:nth-of-type(2){animation-delay:140ms}.slide.active .line-chart circle{opacity:0;transform-box:fill-box;transform-origin:center;animation:dotPop 420ms var(--ease-out) forwards;animation-delay:760ms}
+.slide.active .code-panel,.slide.active .media-frame,.slide.active .quote{animation:itemRise 560ms var(--ease-out) both;animation-delay:150ms}.slide.active .data-table tr{animation:rowReveal 460ms var(--ease-out) both}.slide.active .data-table tbody tr:nth-child(1){animation-delay:180ms}.slide.active .data-table tbody tr:nth-child(2){animation-delay:230ms}.slide.active .data-table tbody tr:nth-child(3){animation-delay:280ms}.slide.active .data-table tbody tr:nth-child(4){animation-delay:330ms}
+@keyframes slideForward{from{opacity:0;transform:translateX(38px) scale(.985)}to{opacity:1;transform:translateX(0) scale(1)}}@keyframes slideBack{from{opacity:0;transform:translateX(-38px) scale(.985)}to{opacity:1;transform:translateX(0) scale(1)}}@keyframes slideSoft{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes contentLift{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes itemRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@keyframes barGrow{from{transform:scaleY(.05);opacity:.55}to{transform:scaleY(1);opacity:1}}@keyframes arrowDraw{from{transform:scaleX(0);opacity:.3}to{transform:scaleX(1);opacity:1}}@keyframes lineDraw{to{stroke-dashoffset:0}}@keyframes dotPop{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}@keyframes rowReveal{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
 .note-title{font-family:var(--font-serif);font-size:19px;font-weight:700}.note-body{font-size:14px;color:var(--muted);line-height:1.65;white-space:pre-line}
 .component-card{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);padding:14px}.component-card h3{font-size:13px;margin-bottom:8px}.component-list{font-size:12px;color:var(--muted);line-height:1.7;padding-left:18px}
 .footer-controls{display:flex;gap:8px;margin-top:auto}.count{font-family:var(--font-mono);font-size:12px;color:var(--muted);white-space:nowrap}
@@ -86,6 +100,9 @@ pre{margin:0;padding:16px 18px;font-family:var(--font-mono);font-size:clamp(11px
 }
 @media(max-width:760px){
   html,body{overflow:auto}.app{height:auto;min-height:100vh;display:block;overflow:visible}.rail{border-width:0 0 1px 0;max-height:none}.notes{display:none}.stage-wrap{overflow:visible}.topbar{position:sticky;top:0;z-index:5}.thumbs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}.stage{overflow:visible;padding:14px}.slide{width:100%;height:auto;min-height:auto;aspect-ratio:auto;padding:26px 22px 58px}.content-grid,.metric-grid,.timeline,.media-layout,.code-layout,.logic-map,.chart-layout,.report-body,.report-grid{grid-template-columns:1fr}.logic-arrows{display:none}.bars{height:150px}.chart-card{height:230px}.quote{font-size:30px}.slide:after{left:22px;right:22px}.media-window{min-height:180px}.data-table{font-size:12px}.data-table th,.data-table td{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
 }
 </style>
 </head>
@@ -194,7 +211,7 @@ const COPY={
    {type:'timeline',k:'Roadmap',title:'Four steps from material to presentation',lead:'Useful for PRDs, project reviews, courseware, and business plans.',steps:[['Collect','Extract the main claim and evidence.'],['Compose','Choose title, two-column, data, mixed-media, code, or roadmap components.'],['Polish','Unify palette, type, spacing, and footer.'],['Present','Add notes, test keyboard, fullscreen, and adaptive modes.']],note:'Roadmaps explain motion without stuffing every arrow into one diagram.'}
   ]}
 };
-let LANG='zh', index=0;
+let LANG='zh', index=0, NAV_DIR=0, HAS_RENDERED=false;
 function t(k){return COPY[LANG][k]||k}
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function highlightCode(str){
@@ -208,12 +225,14 @@ function render(){
  document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
  document.getElementById('thumbs').innerHTML=slides.map((s,i)=>`<button class="thumb ${i===index?'active':''}" onclick="go(${i})"><div class="thumb-no">${String(i+1).padStart(2,'0')} · ${s.k}</div><div class="thumb-title">${s.title||s.quote}</div></button>`).join('');
  document.getElementById('stage').innerHTML=slides.map((s,i)=>slideHtml(s,i)).join('');
- document.querySelectorAll('.slide')[index].classList.add('active');
+ const active=document.querySelectorAll('.slide')[index];
+ active.classList.add('active',HAS_RENDERED?(NAV_DIR<0?'enter-back':'enter-forward'):'enter-soft');
  document.getElementById('top-title').textContent=slides[index].k;
  document.getElementById('top-count').textContent=`${index+1}/${slides.length}`;
  document.getElementById('progress').style.width=((index+1)/slides.length*100)+'%';
  document.getElementById('note-body').textContent=slides[index].note;
  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===LANG));
+ HAS_RENDERED=true;
  requestAnimationFrame(fitSlides);
 }
 function slideHtml(s){
@@ -229,10 +248,10 @@ function slideHtml(s){
  if(s.type==='quote')return `<article class="slide"><div class="quote"><div class="quote-mark">“</div>${s.quote}<div class="quote-by">${s.by}</div></div></article>`;
  return `<article class="slide"><div class="eyebrow">${s.k}</div><h2 class="h2">${s.title}</h2><p class="lead">${s.lead}</p><div class="timeline">${s.steps.map(p=>`<div class="milestone"><strong>${p[0]}</strong><p>${p[1]}</p></div>`).join('')}</div></article>`;
 }
-function setLang(l){LANG=l;render()}
-function go(i){index=i;render()}
-function nextSlide(){index=Math.min(COPY[LANG].slides.length-1,index+1);render()}
-function prevSlide(){index=Math.max(0,index-1);render()}
+function setLang(l){LANG=l;NAV_DIR=0;render()}
+function go(i){NAV_DIR=i<index?-1:i>index?1:0;index=i;render()}
+function nextSlide(){if(index>=COPY[LANG].slides.length-1)return;NAV_DIR=1;index+=1;render()}
+function prevSlide(){if(index<=0)return;NAV_DIR=-1;index-=1;render()}
 function fitSlides(){
  if (window.matchMedia('(max-width:760px)').matches) {
   document.documentElement.style.removeProperty('--slide-w');

@@ -29,7 +29,7 @@ Before writing any code, read the relevant files:
    - `examples/report.html` — Analysis report: summary strip, tabs, SVG trend chart, channel table, timeline, JSON export. *(EN/ZH)*
    - `examples/landing.html` — Product landing page: hero, features, how-it-works, testimonials, pricing, footer. *(EN/ZH)*
    - `examples/kanban.html` — Kanban board: columns, cards with labels/assignee/due date, move modal, filters. *(EN/ZH)*
-   - `examples/presentation.html` — PPT-style deck: adaptive 16:9 slides, thumbnails, logic maps, charts, report summaries, data tables, mixed-media and code slides, keyboard navigation, presenter notes, fullscreen. *(EN/ZH)*
+   - `examples/presentation.html` — PPT-style deck: adaptive 16:9 slides, animated transitions, thumbnails, logic maps, charts, report summaries, data tables, mixed-media and code slides, keyboard navigation, presenter notes, fullscreen. *(EN/ZH)*
    - `examples/mobile.html` — Mobile component kit: phone shell, app bar, bottom tabs, chips, lists, profile card, forms, switches, steppers, slider, bottom sheets, modal, toast, loading and empty states. *(EN/ZH)*
    - `examples/components.html` — Full design system showcase: all tokens, all component states, PPT/mobile components, live demos. *(EN/ZH)*
 
@@ -121,7 +121,7 @@ For all token values, see `references/style-system.md`.
 - **Kanban / triage board:** columns + cards. Meaningful move interaction. Label and search filters.
 - **Landing page:** editorial warmth, confident hierarchy. No generic SaaS gradients.
 - **Prototype:** the product surface is the main object. Paper framing is secondary.
-- **PPT / presentation:** one claim per slide. Use an adaptive 16:9 canvas, slide thumbnails, presenter notes, clear page numbers, and keyboard navigation when building HTML decks. For actual PPTX work, translate the same components into title, section, two-column, metric/chart, logic relationship map, trend chart, report summary, data table, mixed image-text, code display, quote, timeline, and closing slides.
+- **PPT / presentation:** one claim per slide. Use an adaptive 16:9 canvas, slide thumbnails, presenter notes, clear page numbers, directional slide transitions, restrained component entrance animation, and keyboard navigation when building HTML decks. For actual PPTX work, translate the same components into title, section, two-column, metric/chart, logic relationship map, trend chart, report summary, data table, mixed image-text, code display, quote, timeline, and closing slides.
 - **Mobile app:** design the actual app screen first. Use safe-area spacing, thumb-friendly controls, bottom tabs or bottom sheets when appropriate, and avoid shrinking desktop cards into a phone frame.
 - **Teaching / explainer:** progressive disclosure, diagrams, step-by-step, examples.
 - **Design system:** full token showcase + all component states + live demos.
