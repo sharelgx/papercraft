@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PagerCraft — Design System</title>
+<style>
+/* ── Tokens ─────────────────────────────────────────────── */
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --paper-warm:#F7F4EC; --paper-deep:#F3EEE4;
+  --ink:#171716; --muted:#706F68; --faint:#A09E96;
+  --line:#D8D1C3; --line-strong:#C8BBA8; --line-faint:#EAE5DA;
+  --clay:#C86645; --clay-dark:#A84D32; --clay-hover:#B55A3A; --clay-active:#953F28;
+  --clay-soft:#FBEDE6; --clay-border:#E8B49E;
+  --olive:#74845B; --olive-dark:#56663E; --olive-soft:#EDF1E7; --olive-border:#B8C9A3;
+  --amber:#B87A1A; --amber-soft:#FBF1DF; --amber-border:#DDB96A;
+  --red:#B83030; --red-soft:#FBEAEA; --red-border:#DDA0A0;
+  --blue:#2D6BB0; --blue-soft:#E8F0FB; --blue-border:#9DBAE8;
+  --font-serif:ui-serif,Georgia,"Times New Roman",serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius-sm:6px; --radius-md:8px; --radius-lg:10px;
+  --shadow-sm:0 2px 6px rgba(23,23,22,.08); --shadow-md:0 4px 16px rgba(23,23,22,.10);
+  --ease-out:cubic-bezier(.22,1,.36,1); --dur-base:200ms; --dur-slow:300ms;
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden}
+body{font-family:var(--font-sans);font-size:15px;color:var(--ink);background:var(--ivory);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+
+/* ── Topbar ─────────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:rgba(250,249,245,.94);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  padding:0 28px;display:flex;align-items:center;gap:14px;height:56px;
+}
+.topbar-brand{font-family:var(--font-serif);font-size:17px;font-weight:700;color:var(--ink);flex:1;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.topbar-brand span{color:var(--clay)}
+.topbar-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+
+/* ── Lang Toggle ─────────────────────────────────────────── */
+.lang-toggle{display:flex;align-items:center;background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--radius-md);padding:3px;gap:2px}
+.lang-btn{padding:3px 10px;border-radius:calc(var(--radius-md) - 2px);font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--muted);font-family:var(--font-sans);transition:all var(--dur-base)}
+.lang-btn.active{background:var(--clay-soft);color:var(--clay-dark);border-color:var(--clay-border)}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:36px;border-radius:var(--radius-md);font-size:14px;font-weight:500;cursor:pointer;transition:all var(--dur-base);border:1px solid transparent;font-family:var(--font-sans);white-space:nowrap}
+.btn-primary{background:var(--clay);border-color:var(--clay);color:#fff}
+.btn-primary:hover{background:var(--clay-hover);border-color:var(--clay-hover)}
+.btn-primary:active{background:var(--clay-active)}
+.btn-secondary{background:var(--paper);border-color:var(--line);color:var(--ink)}
+.btn-secondary:hover{background:var(--paper-warm);border-color:var(--line-strong)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--muted)}
+.btn-ghost:hover{background:var(--paper-warm);border-color:var(--line-strong);color:var(--ink)}
+.btn-destructive{background:var(--red-soft);border-color:var(--red-border);color:var(--red)}
+.btn-destructive:hover{background:#f5d4d4;border-color:var(--red)}
+.btn:disabled,.btn[disabled]{opacity:.4;cursor:not-allowed;pointer-events:none}
+.btn-compact{height:32px;font-size:13px;padding:0 12px}
+.btn-dense{height:28px;font-size:12px;padding:0 10px}
+
+/* ── Page Layout ─────────────────────────────────────────── */
+.page{max-width:1000px;margin:0 auto;padding:36px 28px 100px}
+.page-title{font-family:var(--font-serif);font-size:28px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.page-subtitle{font-size:14px;color:var(--muted);margin-bottom:40px}
+
+/* ── Section Panel ───────────────────────────────────────── */
+.section{margin-bottom:36px}
+.section-panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.section-header{padding:16px 22px 15px;border-bottom:1px solid var(--line-faint);display:flex;align-items:center;justify-content:space-between}
+.section-title{font-family:var(--font-serif);font-size:18px;font-weight:700;color:var(--ink)}
+.section-sub{font-size:12px;color:var(--faint);font-family:var(--font-mono);margin-top:2px}
+.section-body{padding:22px}
+
+/* ── Color Palette ───────────────────────────────────────── */
+.palette-group{margin-bottom:18px}
+.palette-group-label{font-size:11px;font-weight:600;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.swatch-grid{display:flex;flex-wrap:wrap;gap:10px}
+.swatch{border-radius:var(--radius-md);overflow:hidden;border:1px solid rgba(0,0,0,.07);width:90px;flex-shrink:0}
+.swatch-color{height:48px;display:flex;align-items:flex-end;padding:5px 7px}
+.swatch-info{padding:6px 7px;background:var(--paper-warm);border-top:1px solid var(--line-faint)}
+.swatch-name{font-size:10px;font-weight:600;color:var(--ink);font-family:var(--font-mono)}
+.swatch-hex{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+
+/* ── Typography ──────────────────────────────────────────── */
+.type-stack{margin-bottom:20px}
+.type-stack-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.type-sample{padding:14px 16px;background:var(--paper-warm);border-radius:var(--radius-md);border:1px solid var(--line-faint)}
+.type-sample-zh{font-size:13px;color:var(--muted);margin-top:4px}
+.scale-table{width:100%;border-collapse:collapse}
+.scale-table th{text-align:left;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:6px 10px;border-bottom:1px solid var(--line)}
+.scale-table td{padding:8px 10px;border-bottom:1px solid var(--line-faint);vertical-align:middle}
+.scale-table tr:last-child td{border-bottom:none}
+.scale-token{font-family:var(--font-mono);font-size:11px;color:var(--clay-dark);background:var(--clay-soft);padding:2px 6px;border-radius:var(--radius-sm)}
+
+/* ── Spacing ─────────────────────────────────────────────── */
+.spacing-row{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.spacing-bar{height:16px;background:var(--clay-soft);border:1px solid var(--clay-border);border-radius:3px;flex-shrink:0}
+.spacing-label{font-size:12px;color:var(--muted);white-space:nowrap;min-width:80px;font-family:var(--font-mono)}
+
+/* ── Form Controls ───────────────────────────────────────── */
+.form-row{margin-bottom:18px}
+.form-label{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;display:block}
+.form-states{display:flex;flex-wrap:wrap;gap:12px}
+.field-wrap{display:flex;flex-direction:column;gap:5px;flex:1;min-width:160px}
+.field-state-label{font-size:11px;color:var(--faint);font-family:var(--font-mono)}
+.input{width:100%;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-sans);color:var(--ink);background:var(--paper);outline:none;transition:border-color var(--dur-base),box-shadow var(--dur-base)}
+.input:focus{border-color:var(--clay-border);box-shadow:0 0 0 3px rgba(200,102,69,.1)}
+.input.input-error{border-color:var(--red-border);background:var(--red-soft)}
+.input.input-error:focus{box-shadow:0 0 0 3px rgba(184,48,48,.1)}
+.input:disabled{opacity:.5;cursor:not-allowed;background:var(--paper-warm)}
+.input-error-msg{font-size:11px;color:var(--red)}
+.select-wrap{position:relative;display:inline-block;width:100%}
+.select-wrap select{width:100%;height:36px;padding:0 36px 0 12px;border:1px solid var(--line);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-sans);color:var(--ink);background:var(--paper);outline:none;appearance:none;cursor:pointer;transition:border-color var(--dur-base)}
+.select-wrap select:focus{border-color:var(--clay-border);box-shadow:0 0 0 3px rgba(200,102,69,.1)}
+.select-arrow{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--faint)}
+.textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-sans);color:var(--ink);background:var(--paper);outline:none;resize:vertical;min-height:80px;transition:border-color var(--dur-base)}
+.textarea:focus{border-color:var(--clay-border);box-shadow:0 0 0 3px rgba(200,102,69,.1)}
+.check-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px;cursor:pointer;user-select:none}
+.check-row input[type=checkbox],.check-row input[type=radio]{width:16px;height:16px;accent-color:var(--clay);cursor:pointer}
+.check-row.disabled{opacity:.45;cursor:not-allowed}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;letter-spacing:.02em}
+.badge-success{background:var(--olive-soft);color:var(--olive-dark);border:1px solid var(--olive-border)}
+.badge-warning{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-error{background:var(--red-soft);color:var(--red);border:1px solid var(--red-border)}
+.badge-neutral{background:var(--paper-warm);color:var(--muted);border:1px solid var(--line)}
+.badge-info{background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border)}
+.badge-primary{background:var(--clay-soft);color:var(--clay-dark);border:1px solid var(--clay-border)}
+
+/* ── Table ───────────────────────────────────────────────── */
+.table-wrap{border:1px solid var(--line);border-radius:var(--radius-md);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--paper-warm);border-bottom:1px solid var(--line)}
+td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--line-faint)}
+tr:last-child td{border-bottom:none}
+tr.row-hover td{background:var(--ivory)}
+tr.row-selected td{background:var(--clay-soft)}
+.pagination{display:flex;align-items:center;gap:4px;margin-top:14px;justify-content:center}
+.pg-btn{width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--paper);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--dur-base)}
+.pg-btn:hover{border-color:var(--line-strong);color:var(--ink);background:var(--paper-warm)}
+.pg-btn.active{background:var(--clay);border-color:var(--clay);color:#fff}
+.pg-btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--line-faint);font-weight:600;font-size:14px;color:var(--ink)}
+.card-body{padding:16px 18px;font-size:13px;color:var(--muted);line-height:1.55}
+.kpi-card{padding:18px 20px}
+.kpi-label{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.kpi-value{font-family:var(--font-serif);font-size:28px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:4px}
+.kpi-delta{font-size:12px;font-weight:600;color:var(--olive-dark)}
+.insight-card2{padding:18px 20px}
+.insight-icon-wrap{width:34px;height:34px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;background:var(--clay-soft);margin-bottom:12px;font-size:17px}
+.insight-card-title{font-weight:600;font-size:14px;color:var(--ink);margin-bottom:6px}
+.insight-card-body{font-size:13px;color:var(--muted);line-height:1.55}
+.empty-card{padding:36px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.empty-icon{width:44px;height:44px;border-radius:50%;background:var(--paper-warm);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:20px}
+.empty-title{font-weight:600;font-size:14px;color:var(--ink)}
+.empty-body{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* ── Toasts ──────────────────────────────────────────────── */
+.toast-demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.toast-demo{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--radius-md);font-size:13px;font-weight:500}
+.toast-demo-success{background:var(--olive-dark);color:#fff}
+.toast-demo-warning{background:var(--amber);color:#fff}
+.toast-demo-error{background:var(--red);color:#fff}
+.toast-demo-info{background:var(--blue);color:#fff}
+.toast-icon{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.toast-live-container{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast-live{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius-md);font-size:13px;font-weight:500;box-shadow:var(--shadow-md);min-width:200px;opacity:0;transform:translateY(8px);transition:all var(--dur-slow) var(--ease-out)}
+.toast-live.show{opacity:1;transform:translateY(0)}
+
+/* ── Navigation ──────────────────────────────────────────── */
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--ink)}
+.breadcrumb .sep{color:var(--faint)}
+.breadcrumb .bc-current{color:var(--ink);font-weight:500}
+.tabs-bar2{display:flex;gap:0;border-bottom:1px solid var(--line);margin:20px 0 0}
+.tab-btn2{padding:9px 16px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all var(--dur-base);font-family:var(--font-sans)}
+.tab-btn2:hover{color:var(--ink)}
+.tab-btn2.active{color:var(--clay-dark);border-bottom-color:var(--clay)}
+
+/* ── PPT / Mobile Component Specs ───────────────────────── */
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.spec-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm)}
+.spec-card h3{font-family:var(--font-serif);font-size:18px;margin-bottom:8px;color:var(--ink)}
+.spec-card p{font-size:13px;color:var(--muted);line-height:1.55}
+.slide-mini{aspect-ratio:16/9;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper-warm);padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
+.slide-mini:after{content:"";position:absolute;left:16px;right:16px;bottom:12px;height:1px;background:var(--line)}
+.slide-mini-title{font-family:var(--font-serif);font-size:22px;line-height:1.1;margin-bottom:8px}
+.slide-mini-line{height:7px;background:var(--clay-soft);border:1px solid var(--clay-border);border-radius:99px;margin:7px 0;width:72%}
+.slide-mini-line.olive{background:var(--olive-soft);border-color:var(--olive-border);width:52%}
+.phone-mini{width:150px;height:260px;border:8px solid #1f1e1b;border-radius:28px;background:var(--ivory);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.phone-mini-top{height:34px;border-bottom:1px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:14px}
+.phone-mini-body{padding:10px;display:flex;flex-direction:column;gap:8px}.phone-mini-card{height:46px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.phone-mini-tabs{height:40px;margin-top:auto;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:5px;background:var(--paper)}
+.phone-mini-tab{border-radius:8px}.phone-mini-tab.active{background:var(--clay-soft)}
+.spec-list{margin-top:12px;padding-left:18px;font-size:13px;color:var(--muted);line-height:1.75}
+
+/* ── Collapsible Tokens ───────────────────────────────────── */
+.token-disclosure{margin-top:18px;border-top:1px solid var(--line-faint);padding-top:14px}
+.token-summary{font-size:12px;color:var(--faint);cursor:pointer;user-select:none;display:flex;align-items:center;gap:5px;font-family:var(--font-mono)}
+.token-summary:hover{color:var(--muted)}
+details[open] .token-summary{color:var(--muted)}
+.token-list{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.token-chip{font-family:var(--font-mono);font-size:11px;padding:2px 8px;background:var(--paper-warm);border:1px solid var(--line-faint);border-radius:var(--radius-sm);color:var(--muted)}
+
+/* ── Modal / Drawer ──────────────────────────────────────── */
+.overlay{position:fixed;inset:0;background:rgba(23,23,22,.45);z-index:500;opacity:0;pointer-events:none;transition:opacity var(--dur-slow)}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);z-index:501;background:var(--paper);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);width:480px;max-width:calc(100vw - 32px);opacity:0;pointer-events:none;transition:all var(--dur-slow) var(--ease-out)}
+.modal.show{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
+.modal-header{padding:20px 22px 18px;border-bottom:1px solid var(--line-faint);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-weight:700;font-size:16px;color:var(--ink);font-family:var(--font-serif)}
+.modal-close{width:28px;height:28px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--faint);font-size:18px;transition:all var(--dur-base)}
+.modal-close:hover{background:var(--paper-warm);color:var(--ink)}
+.modal-body{padding:20px 22px;font-size:14px;color:var(--muted);line-height:1.6}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--line-faint);display:flex;justify-content:flex-end;gap:8px}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:501;background:var(--paper);box-shadow:var(--shadow-md);width:min(360px,100vw);max-width:100vw;transform:translateX(100%);transition:transform var(--dur-slow) var(--ease-out)}
+.drawer.show{transform:translateX(0)}
+.drawer-header{padding:20px 22px;border-bottom:1px solid var(--line-faint);display:flex;align-items:center;justify-content:space-between}
+.drawer-title{font-weight:700;font-size:16px;font-family:var(--font-serif)}
+.drawer-body{padding:22px;font-size:14px;color:var(--muted);line-height:1.65}
+
+/* ── Spinner ─────────────────────────────────────────────── */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.spinner-clay{border-color:rgba(200,102,69,.3);border-top-color:var(--clay)}
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider{height:1px;background:var(--line-faint);margin:20px 0}
+
+@media(max-width:660px){
+  .cards-grid{grid-template-columns:1fr}
+  .spec-grid{grid-template-columns:1fr}
+  .toast-demo-grid{grid-template-columns:1fr}
+  .topbar-actions>.btn{display:none}
+  .topbar{padding:0 14px}
+  .page{padding:20px 14px 80px}
+}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar-brand">Pager<span>Craft</span> &nbsp;<span style="font-weight:400;color:var(--muted);font-size:14px" data-t="topbar_sub">Design System / 设计规范</span></div>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost" style="height:32px;font-size:13px" onclick="copyTokens()" data-t="btn_copy_tokens">复制变量</button>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">中文</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-title" data-t="page_title">PagerCraft — 设计规范</div>
+  <div class="page-subtitle" data-t="page_subtitle">组件库 · 色彩系统 · 字体排版 · 交互规范 · 全部自包含，无外部依赖</div>
+
+  <!-- 1. Color Palette -->
+  <section class="section" id="sec-colors">
+    <div class="section-panel">
+      <div class="section-header">
+        <div>
+          <div class="section-title" data-t="sec_color">色彩系统 / Color Palette</div>
+          <div class="section-sub">var(--color-name)</div>
+        </div>
+      </div>
+      <div class="section-body" id="color-body"></div>
+    </div>
+  </section>
+
+  <!-- 2. Typography -->
+  <section class="section" id="sec-type">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_type">字体排版 / Typography</div>
+      </div>
+      <div class="section-body" id="type-body"></div>
+    </div>
+  </section>
+
+  <!-- 3. Spacing -->
+  <section class="section" id="sec-space">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_space">间距系统 / Spacing Scale</div>
+      </div>
+      <div class="section-body" id="space-body"></div>
+    </div>
+  </section>
+
+  <!-- 4. Buttons -->
+  <section class="section" id="sec-btns">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_btns">按钮 / Buttons</div>
+      </div>
+      <div class="section-body" id="btns-body"></div>
+    </div>
+  </section>
+
+  <!-- 5. Form Controls -->
+  <section class="section" id="sec-form">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_form">表单控件 / Form Controls</div>
+      </div>
+      <div class="section-body" id="form-body"></div>
+    </div>
+  </section>
+
+  <!-- 6. Badges -->
+  <section class="section" id="sec-badges">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_badges">徽章与状态 / Badges & Status</div>
+      </div>
+      <div class="section-body" id="badges-body"></div>
+    </div>
+  </section>
+
+  <!-- 7. Table -->
+  <section class="section" id="sec-table">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_table">表格 / Table</div>
+      </div>
+      <div class="section-body" id="table-body"></div>
+    </div>
+  </section>
+
+  <!-- 8. Cards -->
+  <section class="section" id="sec-cards">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_cards">卡片与面板 / Cards & Panels</div>
+      </div>
+      <div class="section-body" id="cards-body"></div>
+    </div>
+  </section>
+
+  <!-- 9. Feedback -->
+  <section class="section" id="sec-feedback">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_feedback">反馈组件 / Feedback</div>
+      </div>
+      <div class="section-body" id="feedback-body"></div>
+    </div>
+  </section>
+
+  <!-- 10. Navigation -->
+  <section class="section" id="sec-nav">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_nav">导航 / Navigation</div>
+      </div>
+      <div class="section-body" id="nav-body"></div>
+    </div>
+  </section>
+
+  <!-- 11. Overlays -->
+  <section class="section" id="sec-ppt">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_ppt">PPT 组件 / Presentation Components</div>
+      </div>
+      <div class="section-body" id="ppt-body"></div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-mobile">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_mobile">手机端组件 / Mobile Components</div>
+      </div>
+      <div class="section-body" id="mobile-body"></div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-overlays">
+    <div class="section-panel">
+      <div class="section-header">
+        <div class="section-title" data-t="sec_overlays">浮层 / Overlays</div>
+      </div>
+      <div class="section-body" id="overlays-body"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal Overlay -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<div class="modal" id="modal">
+  <div class="modal-header">
+    <div class="modal-title" data-t="modal_title">确认操作 / Confirm Action</div>
+    <button class="modal-close" onclick="closeAll()">×</button>
+  </div>
+  <div class="modal-body" data-t="modal_body">这是一个模态弹窗示例，支持标题、正文与操作按钮。点击遮罩或取消按钮可以关闭。</div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" style="height:34px;font-size:13px" onclick="closeAll()" data-t="modal_cancel">取消</button>
+    <button class="btn btn-primary" style="height:34px;font-size:13px" onclick="closeAll()" data-t="modal_confirm">确认</button>
+  </div>
+</div>
+
+<!-- Drawer -->
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-title" data-t="drawer_title">侧边抽屉 / Side Drawer</div>
+    <button class="modal-close" onclick="closeAll()">×</button>
+  </div>
+  <div class="drawer-body" data-t="drawer_body">这是一个从右侧滑入的抽屉面板，适合展示详情、过滤器或辅助信息。可以包含任意内容。</div>
+</div>
+
+<!-- Live Toast Container -->
+<div class="toast-live-container" id="live-toast-container"></div>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────── */
+const I18N = {
+  zh: {
+    topbar_sub: 'Design System / 设计规范',
+    page_title: 'PagerCraft — 设计规范',
+    page_subtitle: '组件库 · 色彩系统 · 字体排版 · 交互规范 · 全部自包含，无外部依赖',
+    btn_copy_tokens: '复制变量',
+    sec_color: '色彩系统 / Color Palette',
+    sec_type: '字体排版 / Typography',
+    sec_space: '间距系统 / Spacing Scale',
+    sec_btns: '按钮 / Buttons',
+    sec_form: '表单控件 / Form Controls',
+    sec_badges: '徽章与状态 / Badges & Status',
+    sec_table: '表格 / Table',
+    sec_cards: '卡片与面板 / Cards & Panels',
+    sec_feedback: '反馈组件 / Feedback',
+    sec_nav: '导航 / Navigation',
+    sec_ppt: 'PPT 组件 / Presentation Components',
+    sec_mobile: '手机端组件 / Mobile Components',
+    sec_overlays: '浮层 / Overlays',
+    // colors
+    grp_base: '基础色 / Base',
+    grp_clay: 'Clay 主色调',
+    grp_olive: 'Olive 绿色调',
+    grp_amber: 'Amber 琥珀',
+    grp_red: 'Red 红色',
+    grp_blue: 'Blue 蓝色',
+    // type
+    font_serif: 'Serif 衬线体',
+    font_sans: 'Sans 无衬线体',
+    font_mono: 'Mono 等宽体',
+    font_sample_en: 'The quick brown fox jumps over the lazy dog.',
+    font_sample_zh: '敏捷的棕色狐狸跃过懒惰的狗。排版应当服务于内容。',
+    scale_label: '字号比例 / Type Scale',
+    // spacing
+    space_label: '间距单位 · 基础值 4px',
+    // buttons
+    btn_variants: '变体 / Variants',
+    btn_sizes: '尺寸 / Sizes',
+    btn_states: '状态 / States',
+    btn_primary: '主要',
+    btn_secondary: '次要',
+    btn_ghost: '幽灵',
+    btn_destructive: '危险',
+    btn_disabled: '禁用',
+    btn_normal: '标准 36px',
+    btn_compact: '紧凑 32px',
+    btn_dense: '密集 28px',
+    btn_default: '默认',
+    btn_loading: '加载中',
+    // form
+    form_input_label: '输入框 / Input',
+    state_default: '默认',
+    state_focus: '聚焦',
+    state_error: '错误',
+    state_disabled: '禁用',
+    input_error_msg: '请输入有效的邮箱地址',
+    form_select_label: '下拉框 / Select',
+    form_select_opt1: '选择一个选项',
+    form_select_opt2: '概览',
+    form_select_opt3: '渠道分析',
+    form_select_opt4: '时间线',
+    form_checkbox_label: '复选框 / Checkbox',
+    form_radio_label: '单选框 / Radio',
+    form_textarea_label: '多行文本 / Textarea',
+    cb_unchecked: '未选中',
+    cb_checked: '已选中',
+    cb_indeterminate: '半选',
+    cb_disabled: '禁用',
+    radio_a: '选项 A',
+    radio_b: '选项 B（已选）',
+    radio_c: '选项 C（禁用）',
+    textarea_placeholder: '在此输入多行文本…',
+    // badges
+    badge_success: '成功',
+    badge_warning: '警告',
+    badge_error: '错误',
+    badge_neutral: '中性',
+    badge_info: '信息',
+    badge_primary: '主要',
+    badge_with_icon: '带图标徽章',
+    badge_verified: '已验证',
+    badge_pending: '待处理',
+    badge_failed: '失败',
+    // table
+    col_name: '名称',
+    col_status: '状态',
+    col_value: '数值',
+    col_date: '日期',
+    // cards
+    card_basic_title: '基础卡片',
+    card_basic_body: '这是一个标准面板，包含头部与正文区域，适合展示任意内容块。',
+    kpi_label: '本月营收',
+    kpi_delta: '▲ +12.4% 环比',
+    insight_title: '推荐渠道突破',
+    insight_body: '推荐渠道占比本季达 38%，CAC 仅为付费渠道的 1/5，建议加大预算。',
+    empty_title: '暂无数据',
+    empty_body: '当前视图没有可显示的内容，尝试调整筛选条件。',
+    empty_btn: '重置筛选',
+    // feedback
+    toast_success: '操作成功完成',
+    toast_warning: '请注意此变更可能影响现有数据',
+    toast_error: '操作失败，请重试',
+    toast_info: '后台任务正在处理中',
+    trigger_toast: '触发提示 / Trigger Toast',
+    toast_trigger_msg: '这是一条实时弹窗提示',
+    // nav
+    nav_breadcrumb: '面包屑导航 / Breadcrumb',
+    nav_tabs: '标签页 / Tabs',
+    nav_pagination: '分页 / Pagination',
+    nav_home: '主页',
+    nav_reports: '报告',
+    nav_current: '增长分析',
+    tab_overview: '概览',
+    tab_channels: '渠道',
+    tab_timeline: '时间线',
+    // ppt
+    ppt_title: '16:9 幻灯片画布',
+    ppt_body: '用于汇报、课程、复盘和产品策略。每页只承载一个判断，备注和缩略图放在画布外。',
+    ppt_item_1: '标题页 / 章节页',
+    ppt_item_2: '双栏内容页',
+    ppt_item_3: '指标卡 + 图表页',
+    ppt_item_4: '引用页 / 结论页',
+    ppt_item_5: '时间线 / 路线图页',
+    ppt_notes_title: '演讲者备注',
+    ppt_notes_body: 'HTML deck 中备注区应该独立于 slide canvas；PPTX 中可转为 speaker notes。',
+    // mobile
+    mobile_title: '手机端 App 外壳',
+    mobile_body: '适合 App 首页、订单流、内容流和移动端工作台。不要把桌面表格直接缩小。',
+    mobile_item_1: '顶部栏 / App Bar',
+    mobile_item_2: '底部导航 / Bottom Tabs',
+    mobile_item_3: '分段控件 / Segmented Control',
+    mobile_item_4: '底部面板 / Bottom Sheet',
+    mobile_sheet_title: '移动端操作面板',
+    mobile_sheet_body: '筛选、确认、快速新建等二级操作优先放在 bottom sheet，而不是挤进顶部栏。',
+    // overlays
+    open_modal: '打开弹窗 / Open Modal',
+    open_drawer: '打开抽屉 / Open Drawer',
+    overlays_desc: '点击下方按钮触发浮层组件。弹窗居中显示，抽屉从右侧滑入。点击遮罩或关闭按钮可收起。',
+    modal_title: '确认操作 / Confirm Action',
+    modal_body: '这是一个模态弹窗示例，支持标题、正文与操作按钮。点击遮罩或取消按钮可以关闭。',
+    modal_cancel: '取消',
+    modal_confirm: '确认',
+    drawer_title: '侧边抽屉 / Side Drawer',
+    drawer_body: '这是一个从右侧滑入的抽屉面板，适合展示详情、过滤器或辅助信息。可以包含任意内容。',
+    // collapsible
+    tokens_used: '使用的变量 / CSS Variables Used',
+    // toast copied
+    toast_copied: '已复制到剪贴板',
+  },
+  en: {
+    topbar_sub: 'Design System',
+    page_title: 'PagerCraft — Design System',
+    page_subtitle: 'Component library · Color system · Typography · Interaction specs · Fully self-contained, no external deps',
+    btn_copy_tokens: 'Copy Tokens',
+    sec_color: 'Color Palette',
+    sec_type: 'Typography',
+    sec_space: 'Spacing Scale',
+    sec_btns: 'Buttons',
+    sec_form: 'Form Controls',
+    sec_badges: 'Badges & Status',
+    sec_table: 'Table',
+    sec_cards: 'Cards & Panels',
+    sec_feedback: 'Feedback',
+    sec_nav: 'Navigation',
+    sec_ppt: 'Presentation Components',
+    sec_mobile: 'Mobile Components',
+    sec_overlays: 'Overlays',
+    grp_base: 'Base Colors',
+    grp_clay: 'Clay (Primary)',
+    grp_olive: 'Olive (Success)',
+    grp_amber: 'Amber (Warning)',
+    grp_red: 'Red (Error)',
+    grp_blue: 'Blue (Info)',
+    font_serif: 'Serif',
+    font_sans: 'Sans-serif',
+    font_mono: 'Monospace',
+    font_sample_en: 'The quick brown fox jumps over the lazy dog.',
+    font_sample_zh: '敏捷的棕色狐狸跃过懒惰的狗。Typography serves content.',
+    scale_label: 'Type Scale',
+    space_label: 'Spacing units · Base: 4px',
+    btn_variants: 'Variants',
+    btn_sizes: 'Sizes',
+    btn_states: 'States',
+    btn_primary: 'Primary',
+    btn_secondary: 'Secondary',
+    btn_ghost: 'Ghost',
+    btn_destructive: 'Destructive',
+    btn_disabled: 'Disabled',
+    btn_normal: 'Normal 36px',
+    btn_compact: 'Compact 32px',
+    btn_dense: 'Dense 28px',
+    btn_default: 'Default',
+    btn_loading: 'Loading',
+    form_input_label: 'Input',
+    state_default: 'Default',
+    state_focus: 'Focus',
+    state_error: 'Error',
+    state_disabled: 'Disabled',
+    input_error_msg: 'Please enter a valid email address',
+    form_select_label: 'Select',
+    form_select_opt1: 'Choose an option',
+    form_select_opt2: 'Overview',
+    form_select_opt3: 'Channel Analysis',
+    form_select_opt4: 'Timeline',
+    form_checkbox_label: 'Checkbox',
+    form_radio_label: 'Radio',
+    form_textarea_label: 'Textarea',
+    cb_unchecked: 'Unchecked',
+    cb_checked: 'Checked',
+    cb_indeterminate: 'Indeterminate',
+    cb_disabled: 'Disabled',
+    radio_a: 'Option A',
+    radio_b: 'Option B (selected)',
+    radio_c: 'Option C (disabled)',
+    textarea_placeholder: 'Enter multi-line text here…',
+    badge_success: 'Success',
+    badge_warning: 'Warning',
+    badge_error: 'Error',
+    badge_neutral: 'Neutral',
+    badge_info: 'Info',
+    badge_primary: 'Primary',
+    badge_with_icon: 'Badges with Icon',
+    badge_verified: 'Verified',
+    badge_pending: 'Pending',
+    badge_failed: 'Failed',
+    col_name: 'Name',
+    col_status: 'Status',
+    col_value: 'Value',
+    col_date: 'Date',
+    card_basic_title: 'Basic Card',
+    card_basic_body: 'A standard panel with a header and body area, suitable for displaying any content block.',
+    kpi_label: 'Monthly Revenue',
+    kpi_delta: '▲ +12.4% QoQ',
+    insight_title: 'Referral Breakout',
+    insight_body: 'Referral now represents 38% of customers with CAC at 1/5 of paid channels. Consider increasing budget.',
+    empty_title: 'No Data',
+    empty_body: 'There\'s nothing to display in this view. Try adjusting your filters.',
+    empty_btn: 'Reset Filters',
+    toast_success: 'Action completed successfully',
+    toast_warning: 'This change may affect existing data',
+    toast_error: 'Operation failed, please try again',
+    toast_info: 'Background task is processing',
+    trigger_toast: 'Trigger Toast',
+    toast_trigger_msg: 'This is a live toast notification',
+    nav_breadcrumb: 'Breadcrumb',
+    nav_tabs: 'Tabs',
+    nav_pagination: 'Pagination',
+    nav_home: 'Home',
+    nav_reports: 'Reports',
+    nav_current: 'Growth Analysis',
+    tab_overview: 'Overview',
+    tab_channels: 'Channels',
+    tab_timeline: 'Timeline',
+    ppt_title: '16:9 Slide Canvas',
+    ppt_body: 'For briefings, lessons, reviews, and product strategy. Each slide carries one claim; notes and thumbnails stay outside the canvas.',
+    ppt_item_1: 'Title / section slide',
+    ppt_item_2: 'Two-column content slide',
+    ppt_item_3: 'Metric cards + chart slide',
+    ppt_item_4: 'Quote / conclusion slide',
+    ppt_item_5: 'Timeline / roadmap slide',
+    ppt_notes_title: 'Speaker Notes',
+    ppt_notes_body: 'In HTML decks, notes should stay outside the slide canvas; in PPTX, map them to speaker notes.',
+    mobile_title: 'Mobile App Shell',
+    mobile_body: 'For app home screens, order flows, content feeds, and mobile workspaces. Do not shrink desktop tables into a phone.',
+    mobile_item_1: 'Top app bar',
+    mobile_item_2: 'Bottom tabs',
+    mobile_item_3: 'Segmented control',
+    mobile_item_4: 'Bottom sheet',
+    mobile_sheet_title: 'Mobile Action Sheet',
+    mobile_sheet_body: 'Put filters, confirmations, and quick-create flows in a bottom sheet instead of crowding the top bar.',
+    open_modal: 'Open Modal',
+    open_drawer: 'Open Drawer',
+    overlays_desc: 'Click the buttons below to trigger overlay components. Modal appears centered, drawer slides in from the right. Click the backdrop or close button to dismiss.',
+    modal_title: 'Confirm Action',
+    modal_body: 'This is a modal dialog example with a title, body, and action buttons. Click the overlay or Cancel to close.',
+    modal_cancel: 'Cancel',
+    modal_confirm: 'Confirm',
+    drawer_title: 'Side Drawer',
+    drawer_body: 'This is a drawer panel that slides in from the right, suitable for displaying details, filters, or supplementary information.',
+    tokens_used: 'CSS Variables Used',
+    toast_copied: 'Copied to clipboard',
+  }
+};
+let LANG = 'zh';
+function t(key) { return (I18N[LANG] && I18N[LANG][key]) ? I18N[LANG][key] : key; }
+function setLang(l) {
+  LANG = l;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const v = I18N[LANG][el.dataset.t]; if (v) el.textContent = v;
+  });
+  document.querySelectorAll('[data-tp]').forEach(el => {
+    const v = I18N[LANG][el.dataset.tp]; if (v) el.placeholder = v;
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+  if (typeof rerenderAll === 'function') rerenderAll();
+}
+
+/* ── Token disclosure helper ─────────────────────────────── */
+function tokenDisclosure(tokens) {
+  const chips = tokens.map(tk => `<span class="token-chip">${tk}</span>`).join('');
+  return `<details class="token-disclosure">
+    <summary class="token-summary">▸ ${t('tokens_used')}</summary>
+    <div class="token-list">${chips}</div>
+  </details>`;
+}
+
+/* ── 1. Color Palette ────────────────────────────────────── */
+const COLOR_GROUPS = [
+  { key: 'grp_base', swatches: [
+    { token: '--ivory',      hex: '#FAF9F5', dark: false },
+    { token: '--paper',      hex: '#FFFFFF', dark: false },
+    { token: '--paper-warm', hex: '#F7F4EC', dark: false },
+    { token: '--paper-deep', hex: '#F3EEE4', dark: false },
+    { token: '--ink',        hex: '#171716', dark: true },
+    { token: '--muted',      hex: '#706F68', dark: true },
+    { token: '--faint',      hex: '#A09E96', dark: false },
+    { token: '--line',       hex: '#D8D1C3', dark: false },
+    { token: '--line-strong',hex: '#C8BBA8', dark: false },
+    { token: '--line-faint', hex: '#EAE5DA', dark: false },
+  ]},
+  { key: 'grp_clay', swatches: [
+    { token: '--clay',        hex: '#C86645', dark: true },
+    { token: '--clay-dark',   hex: '#A84D32', dark: true },
+    { token: '--clay-hover',  hex: '#B55A3A', dark: true },
+    { token: '--clay-active', hex: '#953F28', dark: true },
+    { token: '--clay-soft',   hex: '#FBEDE6', dark: false },
+    { token: '--clay-border', hex: '#E8B49E', dark: false },
+  ]},
+  { key: 'grp_olive', swatches: [
+    { token: '--olive',        hex: '#74845B', dark: true },
+    { token: '--olive-dark',   hex: '#56663E', dark: true },
+    { token: '--olive-soft',   hex: '#EDF1E7', dark: false },
+    { token: '--olive-border', hex: '#B8C9A3', dark: false },
+  ]},
+  { key: 'grp_amber', swatches: [
+    { token: '--amber',        hex: '#B87A1A', dark: true },
+    { token: '--amber-soft',   hex: '#FBF1DF', dark: false },
+    { token: '--amber-border', hex: '#DDB96A', dark: false },
+  ]},
+  { key: 'grp_red', swatches: [
+    { token: '--red',        hex: '#B83030', dark: true },
+    { token: '--red-soft',   hex: '#FBEAEA', dark: false },
+    { token: '--red-border', hex: '#DDA0A0', dark: false },
+  ]},
+  { key: 'grp_blue', swatches: [
+    { token: '--blue',        hex: '#2D6BB0', dark: true },
+    { token: '--blue-soft',   hex: '#E8F0FB', dark: false },
+    { token: '--blue-border', hex: '#9DBAE8', dark: false },
+  ]},
+];
+function renderColors() {
+  const body = document.getElementById('color-body');
+  body.innerHTML = COLOR_GROUPS.map(grp => `
+    <div class="palette-group">
+      <div class="palette-group-label">${t(grp.key)}</div>
+      <div class="swatch-grid">
+        ${grp.swatches.map(s => `
+          <div class="swatch">
+            <div class="swatch-color" style="background:${s.hex}">
+              ${s.dark ? `<span style="font-size:9px;color:rgba(255,255,255,.5);font-family:var(--font-mono)">${s.hex}</span>` : ''}
+            </div>
+            <div class="swatch-info">
+              <div class="swatch-name">${s.token}</div>
+              ${!s.dark ? `<div class="swatch-hex">${s.hex}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('') + tokenDisclosure(['--clay','--olive','--amber','--red','--blue','--ink','--muted','--paper','--paper-warm']);
+}
+
+/* ── 2. Typography ───────────────────────────────────────── */
+const TYPE_SCALE = [
+  { token: 'xs',  px: 11 },
+  { token: 'sm',  px: 13 },
+  { token: 'base',px: 15 },
+  { token: 'md',  px: 17 },
+  { token: 'lg',  px: 20 },
+  { token: 'xl',  px: 24 },
+  { token: '2xl', px: 30 },
+  { token: '3xl', px: 38 },
+];
+const FONT_STACKS = [
+  { key: 'font_serif',  family: 'var(--font-serif)' },
+  { key: 'font_sans',   family: 'var(--font-sans)' },
+  { key: 'font_mono',   family: 'var(--font-mono)' },
+];
+function renderType() {
+  const body = document.getElementById('type-body');
+  const stacks = FONT_STACKS.map(f => `
+    <div class="type-stack">
+      <div class="type-stack-label">${t(f.key)}</div>
+      <div class="type-sample" style="font-family:${f.family}">
+        <div style="font-size:18px;font-weight:600;margin-bottom:3px">${t('font_sample_en')}</div>
+        <div class="type-sample-zh">${t('font_sample_zh')}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const scaleRows = TYPE_SCALE.map(s => `
+    <tr>
+      <td><span class="scale-token">${s.token}</span></td>
+      <td style="color:var(--muted)">${s.px}px</td>
+      <td style="font-size:${s.px}px;font-family:var(--font-sans);line-height:1.3">The quick brown fox</td>
+    </tr>
+  `).join('');
+
+  body.innerHTML = `
+    ${stacks}
+    <div class="type-stack-label" style="margin-bottom:10px">${t('scale_label')}</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Token</th><th>Size</th><th>Sample</th>
+        </tr></thead>
+        <tbody>${scaleRows}</tbody>
+      </table>
+    </div>
+    ${tokenDisclosure(['--font-serif','--font-sans','--font-mono'])}
+  `;
+}
+
+/* ── 3. Spacing Scale ────────────────────────────────────── */
+const SPACING = [
+  {name:'space-1', px:4},{name:'space-2',px:8},{name:'space-3',px:12},
+  {name:'space-4',px:16},{name:'space-5',px:20},{name:'space-6',px:24},
+  {name:'space-8',px:32},{name:'space-10',px:40},{name:'space-12',px:48},
+  {name:'space-16',px:64},{name:'space-20',px:80},{name:'space-24',px:96},
+];
+function renderSpacing() {
+  const body = document.getElementById('space-body');
+  body.innerHTML = `
+    <div style="margin-bottom:14px;font-size:13px;color:var(--muted)">${t('space_label')}</div>
+    ${SPACING.map(s => `
+      <div class="spacing-row">
+        <div class="spacing-label">${s.name} · ${s.px}px</div>
+        <div class="spacing-bar" style="width:${s.px}px"></div>
+      </div>
+    `).join('')}
+    ${tokenDisclosure(['--radius-sm','--radius-md','--radius-lg'])}
+  `;
+}
+
+/* ── 4. Buttons ──────────────────────────────────────────── */
+function renderButtons() {
+  const body = document.getElementById('btns-body');
+  body.innerHTML = `
+    <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('btn_variants')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;align-items:center">
+      <button class="btn btn-primary">${t('btn_primary')}</button>
+      <button class="btn btn-secondary">${t('btn_secondary')}</button>
+      <button class="btn btn-ghost">${t('btn_ghost')}</button>
+      <button class="btn btn-destructive">${t('btn_destructive')}</button>
+      <button class="btn btn-primary" disabled>${t('btn_disabled')}</button>
+    </div>
+    <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('btn_sizes')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;align-items:center">
+      <button class="btn btn-primary">${t('btn_normal')}</button>
+      <button class="btn btn-primary btn-compact">${t('btn_compact')}</button>
+      <button class="btn btn-primary btn-dense">${t('btn_dense')}</button>
+    </div>
+    <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('btn_states')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+      <button class="btn btn-primary">${t('btn_default')}</button>
+      <button class="btn btn-primary" style="background:var(--clay-hover)">${t('btn_primary')} (hover)</button>
+      <button class="btn btn-primary" style="display:inline-flex;gap:8px;align-items:center">
+        <div class="spinner"></div>${t('btn_loading')}
+      </button>
+      <button class="btn btn-ghost" style="display:inline-flex;gap:8px;align-items:center">
+        <div class="spinner spinner-clay"></div>${t('btn_loading')}
+      </button>
+    </div>
+    ${tokenDisclosure(['--clay','--clay-hover','--clay-active','--clay-soft','--clay-border','--line','--radius-md','--dur-base'])}
+  `;
+}
+
+/* ── 5. Form Controls ────────────────────────────────────── */
+function renderForm() {
+  const body = document.getElementById('form-body');
+  body.innerHTML = `
+    <div class="form-row">
+      <label class="form-label">${t('form_input_label')}</label>
+      <div class="form-states">
+        <div class="field-wrap">
+          <span class="field-state-label">${t('state_default')}</span>
+          <input class="input" type="text" value="claude@example.com" placeholder="Email">
+        </div>
+        <div class="field-wrap">
+          <span class="field-state-label">${t('state_focus')}</span>
+          <input class="input" type="text" value="focus state" style="border-color:var(--clay-border);box-shadow:0 0 0 3px rgba(200,102,69,.1)">
+        </div>
+        <div class="field-wrap">
+          <span class="field-state-label">${t('state_error')}</span>
+          <input class="input input-error" type="text" value="bad-email">
+          <span class="input-error-msg">${t('input_error_msg')}</span>
+        </div>
+        <div class="field-wrap">
+          <span class="field-state-label">${t('state_disabled')}</span>
+          <input class="input" type="text" value="disabled" disabled>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">${t('form_select_label')}</label>
+      <div style="max-width:240px">
+        <div class="select-wrap">
+          <select>
+            <option value="">${t('form_select_opt1')}</option>
+            <option value="1">${t('form_select_opt2')}</option>
+            <option value="2" selected>${t('form_select_opt3')}</option>
+            <option value="3">${t('form_select_opt4')}</option>
+          </select>
+          <svg class="select-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">${t('form_checkbox_label')}</label>
+      <label class="check-row"><input type="checkbox"> ${t('cb_unchecked')}</label>
+      <label class="check-row"><input type="checkbox" checked> ${t('cb_checked')}</label>
+      <label class="check-row"><input type="checkbox" id="cb-indet"> ${t('cb_indeterminate')}</label>
+      <label class="check-row disabled"><input type="checkbox" disabled> ${t('cb_disabled')}</label>
+    </div>
+    <div class="form-row">
+      <label class="form-label">${t('form_radio_label')}</label>
+      <label class="check-row"><input type="radio" name="r1"> ${t('radio_a')}</label>
+      <label class="check-row"><input type="radio" name="r1" checked> ${t('radio_b')}</label>
+      <label class="check-row disabled"><input type="radio" name="r1" disabled> ${t('radio_c')}</label>
+    </div>
+    <div class="form-row">
+      <label class="form-label">${t('form_textarea_label')}</label>
+      <textarea class="textarea" data-tp="textarea_placeholder" placeholder="${t('textarea_placeholder')}"></textarea>
+    </div>
+    ${tokenDisclosure(['--clay','--clay-border','--red','--red-soft','--red-border','--line','--radius-md','--paper','--dur-base'])}
+  `;
+  // Set indeterminate
+  const cb = document.getElementById('cb-indet');
+  if (cb) cb.indeterminate = true;
+}
+
+/* ── 6. Badges ───────────────────────────────────────────── */
+function renderBadges() {
+  const body = document.getElementById('badges-body');
+  body.innerHTML = `
+    <div style="margin-bottom:12px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('sec_badges')}</div>
+    <div class="badge-row" style="margin-bottom:20px">
+      <span class="badge badge-success">${t('badge_success')}</span>
+      <span class="badge badge-warning">${t('badge_warning')}</span>
+      <span class="badge badge-error">${t('badge_error')}</span>
+      <span class="badge badge-neutral">${t('badge_neutral')}</span>
+      <span class="badge badge-info">${t('badge_info')}</span>
+      <span class="badge badge-primary">${t('badge_primary')}</span>
+    </div>
+    <div style="margin-bottom:10px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('badge_with_icon')}</div>
+    <div class="badge-row">
+      <span class="badge badge-success">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        ${t('badge_verified')}
+      </span>
+      <span class="badge badge-warning">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3.5M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        ${t('badge_pending')}
+      </span>
+      <span class="badge badge-error">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        ${t('badge_failed')}
+      </span>
+    </div>
+    ${tokenDisclosure(['--olive-soft','--olive-dark','--olive-border','--amber-soft','--amber','--amber-border','--red-soft','--red','--red-border','--blue-soft','--blue','--blue-border','--clay-soft','--clay-dark','--clay-border'])}
+  `;
+}
+
+/* ── 7. Table ────────────────────────────────────────────── */
+const TABLE_DATA = [
+  { name: 'Referral',     status: 'badge-success', statusKey: 'badge_success', value: '$81,200', date: '2026-05-01' },
+  { name: 'Paid Search',  status: 'badge-warning',  statusKey: 'badge_warning', value: '$54,000', date: '2026-05-01', selected: true },
+  { name: 'Organic',      status: 'badge-success',  statusKey: 'badge_success', value: '$41,500', date: '2026-05-01' },
+  { name: 'Email',        status: 'badge-neutral',  statusKey: 'badge_neutral', value: '$22,100', date: '2026-05-01' },
+  { name: 'Social',       status: 'badge-error',    statusKey: 'badge_error',   value: '$11,300', date: '2026-05-01' },
+];
+let activePage = 2;
+function renderTable() {
+  const body = document.getElementById('table-body');
+  const rows = TABLE_DATA.map((r, i) => `
+    <tr class="${r.selected ? 'row-selected' : (i === 0 ? 'row-hover' : '')}">
+      <td style="font-weight:500">${r.name}</td>
+      <td><span class="badge ${r.status}">${t(r.statusKey)}</span></td>
+      <td>${r.value}</td>
+      <td style="color:var(--muted)">${r.date}</td>
+    </tr>
+  `).join('');
+  const pages = [1,2,3,4,5];
+  const pgBtns = pages.map(p => `<button class="pg-btn ${p===activePage?'active':''}" onclick="activePage=${p};renderTable()">${p}</button>`).join('');
+  body.innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>${t('col_name')}</th>
+          <th>${t('col_status')}</th>
+          <th>${t('col_value')}</th>
+          <th>${t('col_date')}</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button class="pg-btn" onclick="activePage=Math.max(1,activePage-1);renderTable()" style="width:auto;padding:0 8px">‹</button>
+      ${pgBtns}
+      <button class="pg-btn" onclick="activePage=Math.min(5,activePage+1);renderTable()" style="width:auto;padding:0 8px">›</button>
+    </div>
+    ${tokenDisclosure(['--paper-warm','--ivory','--clay-soft','--line','--line-faint','--muted','--radius-md'])}
+  `;
+}
+
+/* ── 8. Cards ────────────────────────────────────────────── */
+function renderCards() {
+  const body = document.getElementById('cards-body');
+  body.innerHTML = `
+    <div class="cards-grid">
+      <!-- Basic Card -->
+      <div class="card">
+        <div class="card-header">${t('card_basic_title')}</div>
+        <div class="card-body">${t('card_basic_body')}</div>
+      </div>
+      <!-- KPI Card -->
+      <div class="card">
+        <div class="kpi-card">
+          <div class="kpi-label">${t('kpi_label')}</div>
+          <div class="kpi-value">$214k</div>
+          <div class="kpi-delta">${t('kpi_delta')}</div>
+        </div>
+      </div>
+      <!-- Insight Card -->
+      <div class="card">
+        <div class="insight-card2">
+          <div class="insight-icon-wrap">🔗</div>
+          <div class="insight-card-title">${t('insight_title')}</div>
+          <div class="insight-card-body">${t('insight_body')}</div>
+        </div>
+      </div>
+      <!-- Empty State -->
+      <div class="card">
+        <div class="empty-card">
+          <div class="empty-icon">📭</div>
+          <div class="empty-title">${t('empty_title')}</div>
+          <div class="empty-body">${t('empty_body')}</div>
+          <button class="btn btn-ghost" style="height:32px;font-size:13px">${t('empty_btn')}</button>
+        </div>
+      </div>
+    </div>
+    ${tokenDisclosure(['--paper','--line','--line-faint','--radius-lg','--shadow-sm','--olive-dark','--muted','--ink'])}
+  `;
+}
+
+/* ── 9. Feedback ─────────────────────────────────────────── */
+let toastCount = 0;
+function fireToast(msg, bg) {
+  const container = document.getElementById('live-toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast-live';
+  el.style.background = bg || 'var(--ink)';
+  el.style.color = '#fff';
+  el.textContent = msg;
+  container.appendChild(el);
+  requestAnimationFrame(() => { el.classList.add('show'); });
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 400);
+  }, 2800);
+}
+function renderFeedback() {
+  const body = document.getElementById('feedback-body');
+  body.innerHTML = `
+    <div class="toast-demo-grid">
+      <div class="toast-demo toast-demo-success">
+        <div class="toast-icon">✓</div> ${t('toast_success')}
+      </div>
+      <div class="toast-demo toast-demo-warning">
+        <div class="toast-icon">!</div> ${t('toast_warning')}
+      </div>
+      <div class="toast-demo toast-demo-error">
+        <div class="toast-icon">✕</div> ${t('toast_error')}
+      </div>
+      <div class="toast-demo toast-demo-info">
+        <div class="toast-icon">i</div> ${t('toast_info')}
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="fireToast(t('toast_trigger_msg'), 'var(--clay)')">${t('trigger_toast')}</button>
+    ${tokenDisclosure(['--olive-dark','--amber','--red','--blue','--ink','--radius-md','--shadow-md','--dur-slow','--ease-out'])}
+  `;
+}
+
+/* ── 10. Navigation ──────────────────────────────────────── */
+let activeNavTab = 0;
+function renderNav() {
+  const body = document.getElementById('nav-body');
+  const navTabs = [t('tab_overview'), t('tab_channels'), t('tab_timeline')];
+  const tabBtns = navTabs.map((lbl, i) => `<button class="tab-btn2 ${i===activeNavTab?'active':''}" onclick="activeNavTab=${i};renderNav()">${lbl}</button>`).join('');
+  body.innerHTML = `
+    <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('nav_breadcrumb')}</div>
+    <nav class="breadcrumb" style="margin-bottom:24px">
+      <a href="#">${t('nav_home')}</a>
+      <span class="sep">›</span>
+      <a href="#">${t('nav_reports')}</a>
+      <span class="sep">›</span>
+      <span class="bc-current">${t('nav_current')}</span>
+    </nav>
+    <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('nav_tabs')}</div>
+    <div class="tabs-bar2">${tabBtns}</div>
+    <div style="padding:14px 0 24px;font-size:13px;color:var(--muted)">${navTabs[activeNavTab]} ${LANG==='zh'?'面板内容区域':'tab panel content area'}</div>
+    <div style="margin-bottom:8px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">${t('nav_pagination')}</div>
+    <div class="pagination">
+      <button class="pg-btn" style="width:auto;padding:0 8px">‹</button>
+      ${[1,2,3,4,5].map(p=>`<button class="pg-btn ${p===2?'active':''}">${p}</button>`).join('')}
+      <button class="pg-btn" style="width:auto;padding:0 8px">›</button>
+    </div>
+    ${tokenDisclosure(['--clay','--clay-dark','--muted','--faint','--line','--radius-sm','--dur-base'])}
+  `;
+}
+
+/* ── 11. PPT Components ─────────────────────────────────── */
+function renderPpt() {
+  const body = document.getElementById('ppt-body');
+  body.innerHTML = `
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="slide-mini">
+          <div class="slide-mini-title">${t('ppt_title')}</div>
+          <div class="slide-mini-line"></div>
+          <div class="slide-mini-line olive"></div>
+        </div>
+        <h3>${t('ppt_title')}</h3>
+        <p>${t('ppt_body')}</p>
+        <ul class="spec-list">
+          <li>${t('ppt_item_1')}</li>
+          <li>${t('ppt_item_2')}</li>
+          <li>${t('ppt_item_3')}</li>
+          <li>${t('ppt_item_4')}</li>
+          <li>${t('ppt_item_5')}</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <div style="border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper-warm);padding:16px;margin-bottom:14px">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--clay-dark);margin-bottom:8px">SPEAKER NOTES</div>
+          <div style="height:8px;background:var(--line-faint);border-radius:99px;margin-bottom:8px"></div>
+          <div style="height:8px;background:var(--line-faint);border-radius:99px;width:80%;margin-bottom:8px"></div>
+          <div style="height:8px;background:var(--line-faint);border-radius:99px;width:58%"></div>
+        </div>
+        <h3>${t('ppt_notes_title')}</h3>
+        <p>${t('ppt_notes_body')}</p>
+      </div>
+    </div>
+    ${tokenDisclosure(['--paper','--paper-warm','--line','--line-faint','--clay','--clay-soft','--olive-soft','--font-serif','--font-mono'])}
+  `;
+}
+
+/* ── 12. Mobile Components ──────────────────────────────── */
+function renderMobile() {
+  const body = document.getElementById('mobile-body');
+  body.innerHTML = `
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="phone-mini">
+          <div class="phone-mini-top">PaperKit</div>
+          <div class="phone-mini-body">
+            <div class="phone-mini-card"></div>
+            <div class="phone-mini-card" style="height:34px"></div>
+            <div class="phone-mini-card" style="height:34px"></div>
+          </div>
+          <div class="phone-mini-tabs">
+            <div class="phone-mini-tab active"></div>
+            <div class="phone-mini-tab"></div>
+            <div class="phone-mini-tab"></div>
+            <div class="phone-mini-tab"></div>
+          </div>
+        </div>
+        <h3>${t('mobile_title')}</h3>
+        <p>${t('mobile_body')}</p>
+        <ul class="spec-list">
+          <li>${t('mobile_item_1')}</li>
+          <li>${t('mobile_item_2')}</li>
+          <li>${t('mobile_item_3')}</li>
+          <li>${t('mobile_item_4')}</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <div style="border:1px solid var(--line);border-radius:22px 22px var(--radius-md) var(--radius-md);background:var(--paper);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-sm)">
+          <div style="width:44px;height:4px;background:var(--line);border-radius:99px;margin:0 auto 14px"></div>
+          <div style="font-family:var(--font-serif);font-size:20px;margin-bottom:8px">${t('mobile_sheet_title')}</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.5">${t('mobile_sheet_body')}</div>
+        </div>
+        <h3>${t('mobile_sheet_title')}</h3>
+        <p>${t('mobile_sheet_body')}</p>
+      </div>
+    </div>
+    ${tokenDisclosure(['--ivory','--paper','--paper-warm','--line','--clay-soft','--clay-border','--radius-lg','--shadow-sm'])}
+  `;
+}
+
+/* ── 11. Overlays ────────────────────────────────────────── */
+function openModal() {
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('drawer').classList.remove('show');
+}
+function openDrawer() {
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('drawer').classList.add('show');
+  document.getElementById('modal').classList.remove('show');
+}
+function closeAll() {
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('modal').classList.remove('show');
+  document.getElementById('drawer').classList.remove('show');
+}
+function renderOverlays() {
+  const body = document.getElementById('overlays-body');
+  body.innerHTML = `
+    <p style="font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.6">${t('overlays_desc')}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="openModal()">${t('open_modal')}</button>
+      <button class="btn btn-secondary" onclick="openDrawer()">${t('open_drawer')}</button>
+    </div>
+    ${tokenDisclosure(['--paper','--ink','--line-faint','--radius-lg','--shadow-md','--dur-slow','--ease-out'])}
+  `;
+}
+
+/* ── Copy Tokens ─────────────────────────────────────────── */
+function copyTokens() {
+  const css = `:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --paper-warm:#F7F4EC; --paper-deep:#F3EEE4;
+  --ink:#171716; --muted:#706F68; --faint:#A09E96;
+  --line:#D8D1C3; --line-strong:#C8BBA8; --line-faint:#EAE5DA;
+  --clay:#C86645; --clay-dark:#A84D32; --clay-hover:#B55A3A; --clay-active:#953F28;
+  --clay-soft:#FBEDE6; --clay-border:#E8B49E;
+  --olive:#74845B; --olive-dark:#56663E; --olive-soft:#EDF1E7; --olive-border:#B8C9A3;
+  --amber:#B87A1A; --amber-soft:#FBF1DF; --amber-border:#DDB96A;
+  --red:#B83030; --red-soft:#FBEAEA; --red-border:#DDA0A0;
+  --blue:#2D6BB0; --blue-soft:#E8F0FB; --blue-border:#9DBAE8;
+  --font-serif:ui-serif,Georgia,"Times New Roman",serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius-sm:6px; --radius-md:8px; --radius-lg:10px;
+  --shadow-sm:0 2px 6px rgba(23,23,22,.08); --shadow-md:0 4px 16px rgba(23,23,22,.10);
+  --ease-out:cubic-bezier(.22,1,.36,1); --dur-base:200ms; --dur-slow:300ms;
+}`;
+  navigator.clipboard.writeText(css).then(() => fireToast(t('toast_copied'), 'var(--olive-dark)'));
+}
+
+/* ── rerenderAll ─────────────────────────────────────────── */
+function rerenderAll() {
+  renderColors();
+  renderType();
+  renderSpacing();
+  renderButtons();
+  renderForm();
+  renderBadges();
+  renderTable();
+  renderCards();
+  renderFeedback();
+  renderNav();
+  renderPpt();
+  renderMobile();
+  renderOverlays();
+  // Re-apply data-t translations for modal/drawer (static elements)
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const v = I18N[LANG][el.dataset.t]; if (v) el.textContent = v;
+  });
+}
+
+/* ── Init ────────────────────────────────────────────────── */
+rerenderAll();
+</script>
+</body>
+</html>

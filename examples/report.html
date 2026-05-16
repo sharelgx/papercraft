@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Paper — Analysis Report</title>
+<style>
+/* ── Tokens ─────────────────────────────────────────────── */
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --paper-warm:#F7F4EC; --paper-deep:#F3EEE4;
+  --ink:#171716; --muted:#706F68; --faint:#A09E96;
+  --line:#D8D1C3; --line-strong:#C8BBA8; --line-faint:#EAE5DA;
+  --clay:#C86645; --clay-dark:#A84D32; --clay-hover:#B55A3A; --clay-active:#953F28;
+  --clay-soft:#FBEDE6; --clay-border:#E8B49E;
+  --olive:#74845B; --olive-dark:#56663E; --olive-soft:#EDF1E7; --olive-border:#B8C9A3;
+  --amber:#B87A1A; --amber-soft:#FBF1DF; --amber-border:#DDB96A;
+  --red:#B83030; --red-soft:#FBEAEA; --red-border:#DDA0A0;
+  --blue:#2D6BB0; --blue-soft:#E8F0FB; --blue-border:#9DBAE8;
+  --font-serif:ui-serif,Georgia,"Times New Roman",serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius-sm:6px; --radius-md:8px; --radius-lg:10px;
+  --shadow-sm:0 2px 6px rgba(23,23,22,.08); --shadow-md:0 4px 16px rgba(23,23,22,.10);
+  --ease-out:cubic-bezier(.22,1,.36,1); --dur-base:200ms; --dur-slow:300ms;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:15px;color:var(--ink);background:var(--ivory);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ── Topbar ─────────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,249,245,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  padding:0 24px;
+  display:flex;align-items:center;gap:12px;height:52px;
+}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);flex:1;min-width:0}
+.breadcrumb a{color:var(--muted);text-decoration:none;white-space:nowrap}
+.breadcrumb a:hover{color:var(--ink)}
+.breadcrumb .sep{color:var(--faint)}
+.breadcrumb .current{color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:32px;border-radius:var(--radius-md);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--dur-base);border:1px solid transparent;font-family:var(--font-sans)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--muted)}
+.btn-ghost:hover{background:var(--paper-warm);border-color:var(--line-strong);color:var(--ink)}
+.btn-primary{background:var(--clay);border-color:var(--clay);color:#fff}
+.btn-primary:hover{background:var(--clay-hover);border-color:var(--clay-hover)}
+.btn-primary:active{background:var(--clay-active)}
+.btn-sm{height:28px;padding:0 10px;font-size:12px}
+
+/* ── Lang Toggle ─────────────────────────────────────────── */
+.lang-toggle{display:flex;align-items:center;background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--radius-md);padding:3px;gap:2px}
+.lang-btn{padding:3px 10px;border-radius:calc(var(--radius-md) - 2px);font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--muted);font-family:var(--font-sans);transition:all var(--dur-base)}
+.lang-btn.active{background:var(--clay-soft);color:var(--clay-dark);border-color:var(--clay-border)}
+
+/* ── Page Layout ─────────────────────────────────────────── */
+.page{max-width:900px;margin:0 auto;padding:32px 24px 80px}
+
+/* ── Report Header ───────────────────────────────────────── */
+.report-tag{display:inline-flex;align-items:center;padding:3px 10px;background:var(--clay-soft);color:var(--clay-dark);border:1px solid var(--clay-border);border-radius:var(--radius-sm);font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
+.report-title{font-family:var(--font-serif);font-size:30px;font-weight:700;color:var(--ink);line-height:1.22;margin-bottom:14px}
+.report-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted);margin-bottom:16px}
+.meta-item{display:flex;align-items:center;gap:5px}
+.meta-item svg{opacity:.55}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;letter-spacing:.03em}
+.badge-amber{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-olive{background:var(--olive-soft);color:var(--olive-dark);border:1px solid var(--olive-border)}
+.report-actions{display:flex;align-items:center;gap:8px;padding-bottom:20px;border-bottom:1px solid var(--line-faint);margin-bottom:24px}
+
+/* ── Summary Strip ───────────────────────────────────────── */
+.summary-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:28px;box-shadow:var(--shadow-sm)}
+.summary-cell{background:var(--paper);padding:18px 20px}
+.summary-label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.summary-value{font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:4px}
+.summary-delta{font-size:12px;font-weight:600}
+.delta-up{color:var(--olive-dark)}
+.delta-down{color:var(--red)}
+
+/* ── Tabs ────────────────────────────────────────────────── */
+.tabs-bar{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:24px}
+.tab-btn{padding:10px 16px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all var(--dur-base);font-family:var(--font-sans)}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--clay-dark);border-bottom-color:var(--clay)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── Insight Cards ───────────────────────────────────────── */
+.insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.insight-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.insight-icon{width:32px;height:32px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}
+.insight-icon-olive{background:var(--olive-soft)}
+.insight-icon-blue{background:var(--blue-soft)}
+.insight-icon-amber{background:var(--amber-soft)}
+.insight-icon-red{background:var(--red-soft)}
+.insight-title{font-weight:600;font-size:14px;margin-bottom:6px;color:var(--ink)}
+.insight-body{font-size:13px;color:var(--muted);line-height:1.55}
+
+/* ── Chart ───────────────────────────────────────────────── */
+.chart-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 24px;box-shadow:var(--shadow-sm)}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.chart-title{font-weight:600;font-size:14px;color:var(--ink)}
+.chart-subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+.chart-legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.chart-legend-dot{width:8px;height:8px;border-radius:50%;background:var(--clay)}
+
+/* ── Table ───────────────────────────────────────────────── */
+.table-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.search-input{flex:1;max-width:260px;height:34px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-md);font-size:13px;font-family:var(--font-sans);color:var(--ink);background:var(--paper);outline:none;transition:border-color var(--dur-base)}
+.search-input:focus{border-color:var(--clay-border);box-shadow:0 0 0 3px rgba(200,102,69,.08)}
+.search-input::placeholder{color:var(--faint)}
+.table-wrap{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--paper-warm);border-bottom:1px solid var(--line)}
+td{padding:11px 14px;font-size:13px;color:var(--ink);border-bottom:1px solid var(--line-faint);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--ivory)}
+.trend-up{color:var(--olive-dark);font-weight:600;font-size:12px}
+.trend-down{color:var(--red);font-weight:600;font-size:12px}
+.share-bar{display:flex;align-items:center;gap:8px}
+.bar-bg{flex:1;height:4px;background:var(--line-faint);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;background:var(--clay);border-radius:2px}
+
+/* ── Timeline ────────────────────────────────────────────── */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:16px;padding:0 0 28px}
+.tl-item:last-child{padding-bottom:0}
+.tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:32px}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--clay);border:2px solid var(--paper);box-shadow:0 0 0 2px var(--clay);flex-shrink:0;margin-top:4px}
+.tl-line{flex:1;width:2px;background:var(--line);margin-top:6px}
+.tl-item:last-child .tl-line{display:none}
+.tl-body{flex:1;padding-top:2px}
+.tl-date{font-size:11px;font-weight:600;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.tl-title{font-weight:600;font-size:14px;color:var(--ink);margin-bottom:6px}
+.tl-desc{font-size:13px;color:var(--muted);line-height:1.55}
+
+/* ── Raw Data ────────────────────────────────────────────── */
+.raw-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.raw-toolbar-title{font-weight:600;font-size:14px;color:var(--ink)}
+.raw-code{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px;font-family:var(--font-mono);font-size:12px;line-height:1.7;color:var(--ink);overflow:auto;max-height:480px;box-shadow:var(--shadow-sm)}
+.json-key{color:var(--blue)}
+.json-str{color:var(--olive-dark)}
+.json-num{color:var(--clay-dark)}
+.json-bool{color:var(--amber)}
+
+/* ── Toast ───────────────────────────────────────────────── */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--ink);color:#fff;border-radius:var(--radius-md);font-size:13px;font-weight:500;box-shadow:var(--shadow-md);opacity:0;transform:translateY(8px);transition:all var(--dur-slow) var(--ease-out);pointer-events:none;min-width:220px}
+.toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+.toast-olive{background:var(--olive-dark)}
+
+@media(max-width:640px){
+  .summary-strip{grid-template-columns:1fr 1fr}
+  .insights-grid{grid-template-columns:1fr}
+  .topbar{padding:0 14px}
+  .page{padding:20px 14px 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <nav class="breadcrumb">
+    <a href="#" data-t="nav_reports">报告</a>
+    <span class="sep">›</span>
+    <a href="#">Q2 2026</a>
+    <span class="sep">›</span>
+    <span class="current" data-t="report_title_short">增长分析</span>
+  </nav>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost btn-sm" onclick="copyMarkdown()" data-t="btn_copy_md">复制 Markdown</button>
+    <button class="btn btn-primary btn-sm" onclick="exportJSON()" data-t="btn_export_json">导出 JSON</button>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">中文</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <!-- Report Header -->
+  <div class="report-tag" data-t="report_tag">增长分析</div>
+  <h1 class="report-title" data-t="report_h1">Q2 2026 用户增长与营收分析报告</h1>
+  <div class="report-meta">
+    <span class="meta-item">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 1v4M11 1v4M2 7h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      2026-05-16
+    </span>
+    <span class="meta-item">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span data-t="meta_period">统计周期：2026 Q2（4–6月）</span>
+    </span>
+    <span class="badge badge-amber" data-t="badge_draft">初稿</span>
+    <span class="meta-item" data-t="meta_author">作者：数据分析团队</span>
+  </div>
+  <div class="report-actions">
+    <button class="btn btn-ghost btn-sm" onclick="handleShare()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="12" cy="3" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="4" cy="8" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M6 7l4-2.5M6 9l4 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span data-t="btn_share">分享</span>
+    </button>
+    <button class="btn btn-ghost btn-sm" onclick="handleSave()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span data-t="btn_save">收藏</span>
+    </button>
+  </div>
+
+  <!-- Summary Strip -->
+  <div class="summary-strip" id="summary-strip"></div>
+
+  <!-- Tabs -->
+  <div class="tabs-bar" id="tabs-bar"></div>
+
+  <!-- Tab Panels -->
+  <div class="tab-panel active" id="panel-overview"></div>
+  <div class="tab-panel" id="panel-channels"></div>
+  <div class="tab-panel" id="panel-timeline"></div>
+  <div class="tab-panel" id="panel-raw"></div>
+</main>
+
+<!-- Toast -->
+<div class="toast-container">
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────── */
+const I18N = {
+  zh: {
+    nav_reports: '报告',
+    report_title_short: '增长分析',
+    report_tag: '增长分析',
+    report_h1: 'Q2 2026 用户增长与营收分析报告',
+    meta_period: '统计周期：2026 Q2（4–6月）',
+    badge_draft: '初稿',
+    meta_author: '作者：数据分析团队',
+    btn_share: '分享',
+    btn_save: '收藏',
+    btn_copy_md: '复制 Markdown',
+    btn_export_json: '导出 JSON',
+    // summary
+    sum_new_customers: '新增客户',
+    sum_revenue: '营收',
+    sum_churn: '流失率',
+    sum_ltv: '均客单价',
+    // tabs
+    tab_overview: '概览',
+    tab_channels: '渠道',
+    tab_timeline: '时间线',
+    tab_raw: '原始数据',
+    // insight cards
+    insight1_title: '强劲势头',
+    insight1_body: '本季新增客户环比增长 18.3%，连续三个季度保持两位数增长，增速领跑行业基准线 +7 pp。',
+    insight2_title: '客单价提升',
+    insight2_body: '平均 LTV 上升至 $312，较上季提升 6.8%，付费转化漏斗优化初见成效。',
+    insight3_title: '流失率预警',
+    insight3_body: '流失率由 1.7% 上升至 2.1%，主要集中在注册后 30 天内用户，建议加强 Onboarding 流程。',
+    insight4_title: '推荐渠道突破',
+    insight4_body: '推荐渠道本季占比达 38%，CAC 仅为付费渠道的 1/5，建议加大推荐激励计划预算。',
+    // chart
+    chart_title: '每周新增客户趋势',
+    chart_subtitle: '最近 6 周 · 单位：人',
+    chart_legend: '新增客户',
+    // table
+    col_channel: '渠道',
+    col_new_cust: '新增客户',
+    col_share: '占比',
+    col_revenue: '营收',
+    col_cac: 'CAC',
+    col_conv: '转化率',
+    col_trend: '趋势',
+    search_placeholder: '搜索渠道…',
+    btn_export: '导出',
+    // timeline
+    tl_title: '时间线',
+    // raw
+    raw_title: '原始 JSON 数据',
+    btn_copy: '复制',
+    btn_download: '下载',
+    // toast
+    toast_copied: '已复制到剪贴板',
+    toast_saved: '已收藏该报告',
+    toast_shared: '分享链接已生成',
+    toast_exported: '数据已导出',
+  },
+  en: {
+    nav_reports: 'Reports',
+    report_title_short: 'Growth Analysis',
+    report_tag: 'Growth Analysis',
+    report_h1: 'Q2 2026 User Growth & Revenue Report',
+    meta_period: 'Period: Q2 2026 (Apr–Jun)',
+    badge_draft: 'Preliminary',
+    meta_author: 'By: Data Analytics Team',
+    btn_share: 'Share',
+    btn_save: 'Save',
+    btn_copy_md: 'Copy Markdown',
+    btn_export_json: 'Export JSON',
+    sum_new_customers: 'New Customers',
+    sum_revenue: 'Revenue',
+    sum_churn: 'Churn Rate',
+    sum_ltv: 'Avg LTV',
+    tab_overview: 'Overview',
+    tab_channels: 'Channels',
+    tab_timeline: 'Timeline',
+    tab_raw: 'Raw Data',
+    insight1_title: 'Strong Momentum',
+    insight1_body: 'New customers grew 18.3% QoQ for the third consecutive quarter, outpacing the industry benchmark by +7 pp.',
+    insight2_title: 'LTV Improvement',
+    insight2_body: 'Average LTV rose to $312, up 6.8% QoQ. Paid conversion funnel optimizations are showing early results.',
+    insight3_title: 'Churn Warning',
+    insight3_body: 'Churn climbed from 1.7% to 2.1%, concentrated in users within their first 30 days. Onboarding improvements recommended.',
+    insight4_title: 'Referral Breakout',
+    insight4_body: 'Referral now represents 38% of new customers, with CAC at only 1/5 of paid channels. Consider increasing referral incentive budget.',
+    chart_title: 'Weekly New Customer Trend',
+    chart_subtitle: 'Last 6 weeks · Count',
+    chart_legend: 'New Customers',
+    col_channel: 'Channel',
+    col_new_cust: 'New Customers',
+    col_share: 'Share',
+    col_revenue: 'Revenue',
+    col_cac: 'CAC',
+    col_conv: 'Conv. Rate',
+    col_trend: 'Trend',
+    search_placeholder: 'Search channels…',
+    btn_export: 'Export',
+    tl_title: 'Timeline',
+    raw_title: 'Raw JSON Data',
+    btn_copy: 'Copy',
+    btn_download: 'Download',
+    toast_copied: 'Copied to clipboard',
+    toast_saved: 'Report saved',
+    toast_shared: 'Share link generated',
+    toast_exported: 'Data exported',
+  }
+};
+let LANG = 'zh';
+function t(key) { return (I18N[LANG] && I18N[LANG][key]) ? I18N[LANG][key] : key; }
+function setLang(l) {
+  LANG = l;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const v = I18N[LANG][el.dataset.t]; if (v) el.textContent = v;
+  });
+  document.querySelectorAll('[data-tp]').forEach(el => {
+    const v = I18N[LANG][el.dataset.tp]; if (v) el.placeholder = v;
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+  if (typeof rerenderAll === 'function') rerenderAll();
+}
+
+/* ── Data ─────────────────────────────────────────────────── */
+const SUMMARY_DATA = [
+  { key: 'sum_new_customers', value: '1,842', delta: '+18.3%', up: true },
+  { key: 'sum_revenue',       value: '$214k',  delta: '+12.4%', up: true },
+  { key: 'sum_churn',         value: '2.1%',   delta: '+0.4pp', up: false },
+  { key: 'sum_ltv',           value: '$312',   delta: '+6.8%',  up: true },
+];
+
+const WEEKLY_DATA = [
+  { week: 'W1', label: 'Apr 7',  value: 248 },
+  { week: 'W2', label: 'Apr 14', value: 271 },
+  { week: 'W3', label: 'Apr 21', value: 295 },
+  { week: 'W4', label: 'Apr 28', value: 318 },
+  { week: 'W5', label: 'May 5',  value: 342 },
+  { week: 'W6', label: 'May 12', value: 368 },
+];
+
+const CHANNEL_DATA = [
+  { name_zh: '推荐', name_en: 'Referral',     customers: 700,  share: 38, revenue: '$81k',  cac: '$12', conv: '6.2%', trend: 'up' },
+  { name_zh: '付费搜索', name_en: 'Paid Search', customers: 460, share: 25, revenue: '$54k',  cac: '$58', conv: '3.1%', trend: 'up' },
+  { name_zh: '自然流量', name_en: 'Organic',    customers: 350,  share: 19, revenue: '$41k',  cac: '$8',  conv: '4.7%', trend: 'up' },
+  { name_zh: '邮件',  name_en: 'Email',        customers: 180,  share: 10, revenue: '$22k',  cac: '$15', conv: '5.5%', trend: 'down' },
+  { name_zh: '社交',  name_en: 'Social',       customers: 96,   share: 5,  revenue: '$11k',  cac: '$34', conv: '1.8%', trend: 'down' },
+  { name_zh: '直接',  name_en: 'Direct',       customers: 56,   share: 3,  revenue: '$5k',   cac: '$6',  conv: '8.1%', trend: 'up' },
+];
+
+const TIMELINE_DATA = [
+  {
+    date: '2026-04-03',
+    title_zh: '新版推荐激励计划上线',
+    title_en: 'Referral Incentive Program Launch',
+    desc_zh: '双向奖励推荐计划正式上线，邀请人与被邀请人各得 30 天 Pro 权益，首周完成 2,300 次推荐。',
+    desc_en: 'Two-sided referral program launched. Both referrer and referee receive 30 days of Pro access. 2,300 referrals completed in the first week.',
+  },
+  {
+    date: '2026-04-17',
+    title_zh: 'Onboarding 流程重构',
+    title_en: 'Onboarding Flow Redesign',
+    desc_zh: '将注册到首次核心功能激活的步骤由 7 步简化至 3 步，激活率提升 22%。',
+    desc_en: 'Registration-to-core-activation reduced from 7 steps to 3. Activation rate improved by 22%.',
+  },
+  {
+    date: '2026-04-29',
+    title_zh: '付费搜索预算增加 40%',
+    title_en: 'Paid Search Budget +40%',
+    desc_zh: '批准 Q2 付费搜索预算追加，主攻竞品词与长尾关键词，CPC 环比下降 8%。',
+    desc_en: 'Q2 paid search budget increase approved. Focus on competitor keywords and long-tail terms. CPC down 8% QoQ.',
+  },
+  {
+    date: '2026-05-08',
+    title_zh: '流失率预警会议',
+    title_en: 'Churn Rate Alert Review',
+    desc_zh: '流失率升至 2.1%，触发预警阈值。召开专项会议，锁定问题用户群体，制定 30 日挽回计划。',
+    desc_en: 'Churn rate reached 2.1%, triggering alert threshold. Cross-functional review held; 30-day recovery plan initiated.',
+  },
+  {
+    date: '2026-05-16',
+    title_zh: '季度中期报告发布',
+    title_en: 'Mid-Quarter Report Published',
+    desc_zh: '本报告发布。总体增长势头健康，重点关注流失率控制与推荐渠道规模化。',
+    desc_en: 'This report published. Overall growth trajectory healthy; key focus areas are churn reduction and referral scaling.',
+  },
+];
+
+/* ── Render: Summary Strip ───────────────────────────────── */
+function renderSummary() {
+  const el = document.getElementById('summary-strip');
+  el.innerHTML = SUMMARY_DATA.map(d => `
+    <div class="summary-cell">
+      <div class="summary-label">${t(d.key)}</div>
+      <div class="summary-value">${d.value}</div>
+      <div class="summary-delta ${d.up ? 'delta-up' : 'delta-down'}">${d.up ? '▲' : '▼'} ${d.delta}</div>
+    </div>
+  `).join('');
+}
+
+/* ── Render: Tabs ────────────────────────────────────────── */
+const TABS = ['overview', 'channels', 'timeline', 'raw'];
+function renderTabs() {
+  const bar = document.getElementById('tabs-bar');
+  bar.innerHTML = TABS.map(id => `
+    <button class="tab-btn ${activeTab === id ? 'active' : ''}" onclick="switchTab('${id}')">${t('tab_' + id)}</button>
+  `).join('');
+}
+let activeTab = 'overview';
+function switchTab(id) {
+  activeTab = id;
+  TABS.forEach(t => {
+    document.getElementById('panel-' + t).classList.toggle('active', t === id);
+  });
+  renderTabs();
+}
+
+/* ── Render: Overview Tab ────────────────────────────────── */
+const INSIGHTS = [
+  { key: 1, iconClass: 'insight-icon-olive', emoji: '📈' },
+  { key: 2, iconClass: 'insight-icon-blue',  emoji: '💰' },
+  { key: 3, iconClass: 'insight-icon-red',   emoji: '⚠️' },
+  { key: 4, iconClass: 'insight-icon-amber', emoji: '🔗' },
+];
+function renderOverview() {
+  const panel = document.getElementById('panel-overview');
+  const cards = INSIGHTS.map(i => `
+    <div class="insight-card">
+      <div class="insight-icon ${i.iconClass}">${i.emoji}</div>
+      <div class="insight-title">${t('insight' + i.key + '_title')}</div>
+      <div class="insight-body">${t('insight' + i.key + '_body')}</div>
+    </div>
+  `).join('');
+
+  const maxVal = Math.max(...WEEKLY_DATA.map(d => d.value));
+  const minVal = Math.min(...WEEKLY_DATA.map(d => d.value));
+  const W = 820, H = 200, PAD_L = 48, PAD_R = 24, PAD_T = 28, PAD_B = 40;
+  const chartW = W - PAD_L - PAD_R;
+  const chartH = H - PAD_T - PAD_B;
+  const xStep = chartW / (WEEKLY_DATA.length - 1);
+  const yRange = maxVal - minVal + 60;
+  const yMin = minVal - 30;
+  const pts = WEEKLY_DATA.map((d, i) => ({
+    x: PAD_L + i * xStep,
+    y: PAD_T + chartH - ((d.value - yMin) / yRange) * chartH,
+    v: d.value,
+    label: d.label,
+  }));
+  const polyline = pts.map(p => `${p.x},${p.y}`).join(' ');
+  const area = `M${pts[0].x},${PAD_T + chartH} ` + pts.map(p => `L${p.x},${p.y}`).join(' ') + ` L${pts[pts.length-1].x},${PAD_T + chartH} Z`;
+
+  // y grid lines (3 lines)
+  const gridLines = [0, 0.5, 1].map(f => {
+    const y = PAD_T + chartH * (1 - f);
+    const val = Math.round(yMin + yRange * f);
+    return `<line x1="${PAD_L}" y1="${y}" x2="${PAD_L + chartW}" y2="${y}" stroke="#D8D1C3" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="${PAD_L - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="#A09E96">${val}</text>`;
+  }).join('');
+
+  const dots = pts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#fff" stroke="#C86645" stroke-width="2"/>`).join('');
+  const labels = pts.map(p => `<text x="${p.x}" y="${p.y - 10}" text-anchor="middle" font-size="11" font-weight="600" fill="#C86645">${p.v}</text>`).join('');
+  const xLabels = pts.map(p => `<text x="${p.x}" y="${PAD_T + chartH + 16}" text-anchor="middle" font-size="10" fill="#A09E96">${p.label}</text>`).join('');
+
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+    <defs>
+      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#C86645" stop-opacity="0.13"/>
+        <stop offset="100%" stop-color="#C86645" stop-opacity="0.01"/>
+      </linearGradient>
+    </defs>
+    ${gridLines}
+    <path d="${area}" fill="url(#areaGrad)"/>
+    <polyline points="${polyline}" fill="none" stroke="#C86645" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${dots}
+    ${labels}
+    ${xLabels}
+  </svg>`;
+
+  panel.innerHTML = `
+    <div class="insights-grid">${cards}</div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">${t('chart_title')}</div>
+          <div class="chart-subtitle">${t('chart_subtitle')}</div>
+        </div>
+        <div class="chart-legend"><span class="chart-legend-dot"></span> ${t('chart_legend')}</div>
+      </div>
+      ${svg}
+    </div>
+  `;
+}
+
+/* ── Render: Channels Tab ────────────────────────────────── */
+let channelSearch = '';
+function renderChannels() {
+  const panel = document.getElementById('panel-channels');
+  const filtered = CHANNEL_DATA.filter(d => {
+    const name = LANG === 'zh' ? d.name_zh : d.name_en;
+    return name.toLowerCase().includes(channelSearch.toLowerCase());
+  });
+  const rows = filtered.map(d => {
+    const name = LANG === 'zh' ? d.name_zh : d.name_en;
+    const trendClass = d.trend === 'up' ? 'trend-up' : 'trend-down';
+    const trendStr = d.trend === 'up' ? '▲' : '▼';
+    return `<tr>
+      <td style="font-weight:500">${name}</td>
+      <td>${d.customers.toLocaleString()}</td>
+      <td>
+        <div class="share-bar">
+          <div class="bar-bg"><div class="bar-fill" style="width:${d.share}%"></div></div>
+          <span style="font-size:12px;color:var(--muted);min-width:30px">${d.share}%</span>
+        </div>
+      </td>
+      <td>${d.revenue}</td>
+      <td>${d.cac}</td>
+      <td>${d.conv}</td>
+      <td class="${trendClass}">${trendStr}</td>
+    </tr>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <div class="table-toolbar">
+      <input class="search-input" type="text" value="${channelSearch}" data-tp="search_placeholder" placeholder="${t('search_placeholder')}" oninput="channelSearch=this.value;renderChannels()" />
+      <button class="btn btn-ghost btn-sm" onclick="exportChannels()">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        ${t('btn_export')}
+      </button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>${t('col_channel')}</th>
+          <th>${t('col_new_cust')}</th>
+          <th style="min-width:120px">${t('col_share')}</th>
+          <th>${t('col_revenue')}</th>
+          <th>${t('col_cac')}</th>
+          <th>${t('col_conv')}</th>
+          <th>${t('col_trend')}</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+/* ── Render: Timeline Tab ────────────────────────────────── */
+function renderTimeline() {
+  const panel = document.getElementById('panel-timeline');
+  const items = TIMELINE_DATA.map(e => {
+    const title = LANG === 'zh' ? e.title_zh : e.title_en;
+    const desc  = LANG === 'zh' ? e.desc_zh  : e.desc_en;
+    return `<div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-date">${e.date}</div>
+        <div class="tl-title">${title}</div>
+        <div class="tl-desc">${desc}</div>
+      </div>
+    </div>`;
+  }).join('');
+  panel.innerHTML = `<div class="timeline">${items}</div>`;
+}
+
+/* ── Render: Raw Data Tab ────────────────────────────────── */
+function renderRaw() {
+  const panel = document.getElementById('panel-raw');
+  const rawObj = { summary: SUMMARY_DATA, weekly: WEEKLY_DATA, channels: CHANNEL_DATA, timeline: TIMELINE_DATA };
+  const json = JSON.stringify(rawObj, null, 2);
+  const highlighted = json
+    .replace(/(".*?")\s*:/g, '<span class="json-key">$1</span>:')
+    .replace(/:\s*(".*?")/g, ': <span class="json-str">$1</span>')
+    .replace(/:\s*(\d+\.?\d*)/g, ': <span class="json-num">$1</span>')
+    .replace(/:\s*(true|false)/g, ': <span class="json-bool">$1</span>');
+
+  panel.innerHTML = `
+    <div class="raw-toolbar">
+      <span class="raw-toolbar-title">${t('raw_title')}</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="copyRaw()">${t('btn_copy')}</button>
+        <button class="btn btn-primary btn-sm" onclick="downloadRaw()">${t('btn_download')}</button>
+      </div>
+    </div>
+    <pre class="raw-code">${highlighted}</pre>
+  `;
+}
+
+/* ── rerenderAll ─────────────────────────────────────────── */
+function rerenderAll() {
+  renderSummary();
+  renderTabs();
+  renderOverview();
+  renderChannels();
+  renderTimeline();
+  renderRaw();
+}
+
+/* ── Toast ───────────────────────────────────────────────── */
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ── Actions ─────────────────────────────────────────────── */
+function copyMarkdown() {
+  const md = `# ${t('report_h1')}\n\n**${t('meta_period')}**\n\n## ${t('tab_overview')}\n\n- ${t('insight1_title')}: ${t('insight1_body')}\n- ${t('insight2_title')}: ${t('insight2_body')}\n- ${t('insight3_title')}: ${t('insight3_body')}\n- ${t('insight4_title')}: ${t('insight4_body')}\n`;
+  navigator.clipboard.writeText(md).then(() => showToast(t('toast_copied')));
+}
+function exportJSON() {
+  showToast(t('toast_exported'));
+}
+function handleShare() {
+  showToast(t('toast_shared'));
+}
+function handleSave() {
+  showToast(t('toast_saved'));
+}
+function exportChannels() {
+  showToast(t('toast_exported'));
+}
+function copyRaw() {
+  const json = JSON.stringify({ summary: SUMMARY_DATA, weekly: WEEKLY_DATA, channels: CHANNEL_DATA, timeline: TIMELINE_DATA }, null, 2);
+  navigator.clipboard.writeText(json).then(() => showToast(t('toast_copied')));
+}
+function downloadRaw() {
+  const json = JSON.stringify({ summary: SUMMARY_DATA, weekly: WEEKLY_DATA, channels: CHANNEL_DATA, timeline: TIMELINE_DATA }, null, 2);
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+  a.download = 'q2-2026-growth-report.json';
+  a.click();
+  showToast(t('toast_exported'));
+}
+
+/* ── Init ────────────────────────────────────────────────── */
+rerenderAll();
+</script>
+</body>
+</html>

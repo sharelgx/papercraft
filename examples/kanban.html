@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Roadmap — Kanban</title>
+<style>
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --paper-warm:#F7F4EC; --paper-deep:#F3EEE4;
+  --ink:#171716; --muted:#706F68; --faint:#A09E96;
+  --line:#D8D1C3; --line-strong:#C8BBA8; --line-faint:#EAE5DA;
+  --clay:#C86645; --clay-dark:#A84D32; --clay-hover:#B55A3A;
+  --clay-soft:#FBEDE6; --clay-border:#E8B49E;
+  --olive:#74845B; --olive-dark:#56663E; --olive-soft:#EDF1E7; --olive-border:#B8C9A3;
+  --amber:#B87A1A; --amber-soft:#FBF1DF; --amber-border:#DDB96A;
+  --red:#B83030; --red-soft:#FBEAEA; --red-border:#DDA0A0;
+  --blue:#2D6BB0; --blue-soft:#E8F0FB; --blue-border:#9DBAE8;
+  --font-serif:ui-serif,Georgia,"Times New Roman",serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius-sm:6px; --radius-md:8px; --radius-lg:10px;
+  --shadow-sm:0 2px 6px rgba(23,23,22,.08); --shadow-md:0 4px 16px rgba(23,23,22,.10);
+  --ease-out:cubic-bezier(.22,1,.36,1); --dur-base:200ms; --dur-slow:300ms;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-sans);background:var(--ivory);color:var(--ink);font-size:14px;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{height:52px;background:var(--paper);border-bottom:1px solid var(--line-faint);padding:0 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;z-index:50}
+.topbar-title{font-family:var(--font-serif);font-size:16px;font-weight:700;color:var(--ink);margin-right:8px;white-space:nowrap}
+.topbar-sep{width:1px;height:20px;background:var(--line-faint);flex-shrink:0}
+.filter-group{display:flex;gap:4px}
+.filter-btn{padding:4px 10px;font-size:12px;font-family:var(--font-sans);border:1px solid var(--line);border-radius:var(--radius-sm);background:transparent;color:var(--muted);cursor:pointer;transition:background var(--dur-base),color var(--dur-base),border-color var(--dur-base)}
+.filter-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filter-btn:hover:not(.active){background:var(--paper-warm);border-color:var(--line-strong)}
+.search-input{padding:5px 10px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-sans);background:var(--ivory);color:var(--ink);outline:none;width:180px;transition:border-color var(--dur-base)}
+.search-input:focus{border-color:var(--clay)}
+.search-input::placeholder{color:var(--faint)}
+.topbar-spacer{flex:1}
+.lang-toggle{display:flex;background:var(--ivory);border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden}
+.lang-btn{padding:4px 10px;font-size:12px;font-family:var(--font-sans);border:none;background:transparent;color:var(--muted);cursor:pointer;transition:background var(--dur-base),color var(--dur-base)}
+.lang-btn.active{background:var(--clay-soft);color:var(--clay)}
+.add-card-btn{padding:6px 14px;background:var(--clay);color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-family:var(--font-sans);cursor:pointer;transition:background var(--dur-base);white-space:nowrap;font-weight:500}
+.add-card-btn:hover{background:var(--clay-hover)}
+
+/* BOARD */
+.board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding:16px 20px}
+.board{display:flex;gap:16px;height:100%;min-width:max-content}
+.column{width:270px;flex-shrink:0;display:flex;flex-direction:column;background:var(--paper-warm);border:1px solid var(--line-faint);border-radius:var(--radius-lg);overflow:hidden}
+.col-header{padding:12px 14px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line-faint);background:var(--paper-warm);flex-shrink:0}
+.col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.col-dot.backlog{background:var(--faint)}
+.col-dot.todo{background:var(--blue)}
+.col-dot.progress{background:var(--amber)}
+.col-dot.done{background:var(--olive)}
+.col-title{font-size:13px;font-weight:600;color:var(--ink)}
+.col-count{margin-left:auto;background:var(--line-faint);color:var(--muted);font-size:11px;font-weight:600;border-radius:20px;padding:1px 7px;min-width:22px;text-align:center}
+.col-move-target{border:2px dashed transparent;transition:border-color var(--dur-base),background var(--dur-base)}
+.col-move-target.drop-ready{border-color:var(--clay);background:var(--clay-soft)}
+.cards-list{flex:1;overflow-y:auto;padding:10px 10px 4px;display:flex;flex-direction:column;gap:8px}
+.cards-list::-webkit-scrollbar{width:4px}
+.cards-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+
+/* CARD */
+.card{background:var(--paper);border:1.5px solid var(--line-faint);border-radius:var(--radius-md);padding:12px 13px;cursor:pointer;transition:border-color var(--dur-base),box-shadow var(--dur-base),transform var(--dur-base);position:relative}
+.card:hover{border-color:var(--line-strong);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+.card.selected{border-color:var(--clay);box-shadow:0 0 0 2px var(--clay-soft)}
+.card.hidden{display:none}
+.card-labels{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.label{padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600}
+.label.bug{background:var(--red-soft);color:var(--red)}
+.label.feature{background:var(--blue-soft);color:var(--blue)}
+.label.design{background:var(--olive-soft);color:var(--olive-dark)}
+.label.chore{background:var(--amber-soft);color:var(--amber)}
+.card-title{font-size:13px;font-weight:500;color:var(--ink);line-height:1.45;margin-bottom:10px}
+.card-footer{display:flex;align-items:center;gap:6px}
+.card-assignee{width:22px;height:22px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.card-due{font-size:11px;color:var(--faint);margin-left:auto}
+.card-due.overdue{color:var(--red)}
+.priority{width:5px;border-radius:2px;align-self:stretch;flex-shrink:0;margin-left:4px}
+.priority.high{background:var(--red)}
+.priority.medium{background:var(--amber)}
+.priority.low{background:var(--olive)}
+
+/* COL FOOTER */
+.col-footer{padding:8px 10px;flex-shrink:0;border-top:1px solid var(--line-faint)}
+.col-add-btn{width:100%;padding:6px;font-size:12px;font-family:var(--font-sans);border:1px dashed var(--line);border-radius:var(--radius-sm);background:transparent;color:var(--faint);cursor:pointer;transition:background var(--dur-base),color var(--dur-base),border-color var(--dur-base)}
+.col-add-btn:hover{background:var(--paper-deep);color:var(--muted);border-color:var(--line-strong)}
+
+/* INLINE ADD FORM */
+.inline-form{background:var(--ivory);border:1.5px solid var(--clay-border);border-radius:var(--radius-md);padding:10px}
+.inline-form input{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-sans);outline:none;background:var(--paper);color:var(--ink);margin-bottom:8px}
+.inline-form input:focus{border-color:var(--clay)}
+.inline-form-actions{display:flex;gap:6px}
+.inline-btn{padding:5px 12px;font-size:12px;font-family:var(--font-sans);border-radius:var(--radius-sm);cursor:pointer;border:1px solid}
+.inline-btn.confirm{background:var(--clay);border-color:var(--clay);color:#fff}
+.inline-btn.cancel{background:transparent;border-color:var(--line);color:var(--muted)}
+
+/* MODAL OVERLAY */
+.modal-overlay{position:fixed;inset:0;background:rgba(23,23,22,.35);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity var(--dur-slow)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;width:400px;max-width:90vw;box-shadow:var(--shadow-md);transform:translateY(8px);transition:transform var(--dur-slow)}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.modal-title{font-size:15px;font-weight:600;color:var(--ink);line-height:1.4;max-width:330px}
+.modal-close{background:none;border:none;font-size:18px;color:var(--faint);cursor:pointer;padding:2px 6px;border-radius:var(--radius-sm);transition:color var(--dur-base)}
+.modal-close:hover{color:var(--ink)}
+.modal-labels{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.modal-meta{font-size:12px;color:var(--faint);margin-bottom:6px}
+.modal-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;color:var(--muted)}
+.modal-divider{height:1px;background:var(--line-faint);margin:14px 0}
+.modal-move-label{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.modal-move-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.modal-move-btn{padding:7px 10px;font-size:12px;font-family:var(--font-sans);border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--ivory);color:var(--muted);cursor:pointer;text-align:left;transition:background var(--dur-base),border-color var(--dur-base),color var(--dur-base)}
+.modal-move-btn:hover{background:var(--paper-warm);border-color:var(--line-strong);color:var(--ink)}
+.modal-move-btn.current-col{background:var(--line-faint);color:var(--faint);cursor:default;border-color:transparent}
+
+/* AVATAR COLORS */
+.av-clay{background:var(--clay-soft);color:var(--clay-dark)}
+.av-olive{background:var(--olive-soft);color:var(--olive-dark)}
+.av-amber{background:var(--amber-soft);color:var(--amber)}
+.av-blue{background:var(--blue-soft);color:var(--blue)}
+.av-red{background:var(--red-soft);color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="topbar-title" data-t="board_title">产品路线图</span>
+  <div class="topbar-sep"></div>
+  <div class="filter-group" id="filter-group">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" data-t="filter_all">全部</button>
+    <button class="filter-btn" data-filter="bug" onclick="setFilter('bug')">Bug</button>
+    <button class="filter-btn" data-filter="feature" onclick="setFilter('feature')" data-t="filter_feature">功能</button>
+    <button class="filter-btn" data-filter="design" onclick="setFilter('design')">Design</button>
+  </div>
+  <div class="topbar-sep"></div>
+  <input type="text" class="search-input" id="search-input" data-t-placeholder="search_ph" placeholder="搜索卡片…" oninput="applyFilters()">
+  <div class="topbar-spacer"></div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+  <button class="add-card-btn" data-t="add_card_btn" onclick="openAddCard()">添加卡片</button>
+</div>
+
+<!-- BOARD -->
+<div class="board-wrap">
+  <div class="board" id="board">
+
+    <!-- BACKLOG -->
+    <div class="column col-move-target" data-col="backlog" onclick="handleColClick(event,'backlog')">
+      <div class="col-header">
+        <div class="col-dot backlog"></div>
+        <span class="col-title" data-t="col_backlog">待规划</span>
+        <span class="col-count" id="count-backlog">0</span>
+      </div>
+      <div class="cards-list" id="col-backlog"></div>
+      <div class="col-footer">
+        <button class="col-add-btn" data-t="col_add" onclick="openInlineForm('backlog',event)">+ 添加</button>
+      </div>
+    </div>
+
+    <!-- TODO -->
+    <div class="column col-move-target" data-col="todo" onclick="handleColClick(event,'todo')">
+      <div class="col-header">
+        <div class="col-dot todo"></div>
+        <span class="col-title" data-t="col_todo">待处理</span>
+        <span class="col-count" id="count-todo">0</span>
+      </div>
+      <div class="cards-list" id="col-todo"></div>
+      <div class="col-footer">
+        <button class="col-add-btn" data-t="col_add" onclick="openInlineForm('todo',event)">+ 添加</button>
+      </div>
+    </div>
+
+    <!-- IN PROGRESS -->
+    <div class="column col-move-target" data-col="progress" onclick="handleColClick(event,'progress')">
+      <div class="col-header">
+        <div class="col-dot progress"></div>
+        <span class="col-title" data-t="col_progress">进行中</span>
+        <span class="col-count" id="count-progress">0</span>
+      </div>
+      <div class="cards-list" id="col-progress"></div>
+      <div class="col-footer">
+        <button class="col-add-btn" data-t="col_add" onclick="openInlineForm('progress',event)">+ 添加</button>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="column col-move-target" data-col="done" onclick="handleColClick(event,'done')">
+      <div class="col-header">
+        <div class="col-dot done"></div>
+        <span class="col-title" data-t="col_done">已完成</span>
+        <span class="col-count" id="count-done">0</span>
+      </div>
+      <div class="cards-list" id="col-done"></div>
+      <div class="col-footer">
+        <button class="col-add-btn" data-t="col_add" onclick="openInlineForm('done',event)">+ 添加</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-card-title">-</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-labels" id="modal-card-labels"></div>
+    <div class="modal-row" id="modal-assignee-row">
+      <span id="modal-assignee-avatar" class="card-assignee"></span>
+      <span id="modal-assignee-name"></span>
+    </div>
+    <div class="modal-row">
+      <span id="modal-due-label" data-t="modal_due">截止日期：</span>
+      <span id="modal-due-date"></span>
+    </div>
+    <div class="modal-row">
+      <span data-t="modal_priority">优先级：</span>
+      <span id="modal-priority-text"></span>
+    </div>
+    <div class="modal-divider"></div>
+    <p class="modal-move-label" data-t="modal_move_to">移动到</p>
+    <div class="modal-move-btns" id="modal-move-btns"></div>
+  </div>
+</div>
+
+<!-- ADD CARD MODAL -->
+<div class="modal-overlay" id="add-modal-overlay" onclick="handleAddOverlayClick(event)">
+  <div class="modal" id="add-modal">
+    <div class="modal-header">
+      <div class="modal-title" data-t="add_modal_title">添加新卡片</div>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px" data-t="add_label_title">标题</label>
+        <input type="text" id="add-title-input" style="width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-sans);outline:none;background:var(--paper);color:var(--ink)" data-t-placeholder="add_title_ph" placeholder="卡片标题…">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px" data-t="add_label_col">目标列</label>
+        <select id="add-col-select" style="width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-sans);outline:none;background:var(--paper);color:var(--ink)">
+          <option value="backlog" data-t-opt="col_backlog">待规划</option>
+          <option value="todo" data-t-opt="col_todo">待处理</option>
+          <option value="progress" data-t-opt="col_progress">进行中</option>
+          <option value="done" data-t-opt="col_done">已完成</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px" data-t="add_label_type">类型</label>
+        <select id="add-label-select" style="width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-sans);outline:none;background:var(--paper);color:var(--ink)">
+          <option value="feature">Feature</option>
+          <option value="bug">Bug</option>
+          <option value="design">Design</option>
+          <option value="chore">Chore</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="inline-btn confirm" onclick="submitAddCard()" data-t="add_confirm_btn">添加卡片</button>
+        <button class="inline-btn cancel" onclick="closeAddModal()" data-t="add_cancel_btn">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const I18N = {
+  zh:{
+    board_title:'产品路线图',
+    filter_all:'全部', filter_feature:'功能',
+    search_ph:'搜索卡片…',
+    add_card_btn:'添加卡片',
+    col_backlog:'待规划', col_todo:'待处理', col_progress:'进行中', col_done:'已完成',
+    col_add:'+ 添加',
+    modal_due:'截止日期：', modal_priority:'优先级：', modal_move_to:'移动到',
+    priority_high:'高', priority_medium:'中', priority_low:'低',
+    add_modal_title:'添加新卡片',
+    add_label_title:'标题', add_title_ph:'卡片标题…',
+    add_label_col:'目标列', add_label_type:'类型',
+    add_confirm_btn:'添加卡片', add_cancel_btn:'取消'
+  },
+  en:{
+    board_title:'Product Roadmap',
+    filter_all:'All', filter_feature:'Feature',
+    search_ph:'Search cards…',
+    add_card_btn:'Add Card',
+    col_backlog:'Backlog', col_todo:'Todo', col_progress:'In Progress', col_done:'Done',
+    col_add:'+ Add',
+    modal_due:'Due date:', modal_priority:'Priority:', modal_move_to:'Move to',
+    priority_high:'High', priority_medium:'Medium', priority_low:'Low',
+    add_modal_title:'Add New Card',
+    add_label_title:'Title', add_title_ph:'Card title…',
+    add_label_col:'Target column', add_label_type:'Type',
+    add_confirm_btn:'Add Card', add_cancel_btn:'Cancel'
+  }
+};
+let LANG = 'zh';
+function t(k){ return I18N[LANG][k] || k; }
+function setLang(l){
+  LANG = l;
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    if(I18N[LANG][el.dataset.t]) el.textContent = I18N[LANG][el.dataset.t];
+  });
+  document.querySelectorAll('[data-t-placeholder]').forEach(el=>{
+    if(I18N[LANG][el.dataset.tPlaceholder]) el.placeholder = I18N[LANG][el.dataset.tPlaceholder];
+  });
+  document.querySelectorAll('[data-t-opt]').forEach(el=>{
+    if(I18N[LANG][el.dataset.tOpt]) el.textContent = I18N[LANG][el.dataset.tOpt];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  document.documentElement.lang = l==='zh'?'zh':'en';
+  if(modalOpen) refreshModal();
+}
+
+const AVATARS = [
+  {initials:'WL',cls:'av-clay'},{initials:'SY',cls:'av-olive'},
+  {initials:'MR',cls:'av-amber'},{initials:'TK',cls:'av-blue'},
+  {initials:'JW',cls:'av-red'}
+];
+
+const CARDS = [
+  {id:1,col:'backlog',title:'Add AI-powered autocomplete for document editor',labels:['feature'],assignee:0,due:'2025-06-15',priority:'high'},
+  {id:2,col:'backlog',title:'Redesign onboarding flow for new free-tier users',labels:['design'],assignee:1,due:'2025-06-20',priority:'medium'},
+  {id:3,col:'backlog',title:'Export to EPUB format',labels:['feature'],assignee:2,due:'2025-07-01',priority:'low'},
+  {id:4,col:'backlog',title:'Crash on iPad when opening files >10 MB',labels:['bug'],assignee:3,due:'2025-05-28',priority:'high'},
+  {id:5,col:'todo',title:'Multilingual spell-check integration',labels:['feature'],assignee:0,due:'2025-06-05',priority:'medium'},
+  {id:6,col:'todo',title:'Settings page visual refresh',labels:['design'],assignee:1,due:'2025-06-10',priority:'low'},
+  {id:7,col:'todo',title:'Broken link in footer on /pricing page',labels:['bug'],assignee:4,due:'2025-05-22',priority:'high'},
+  {id:8,col:'todo',title:'Upgrade Node.js runtime to v22',labels:['chore'],assignee:2,due:'2025-05-30',priority:'medium'},
+  {id:9,col:'progress',title:'Style refinement: tone selector UI',labels:['design','feature'],assignee:1,due:'2025-05-25',priority:'high'},
+  {id:10,col:'progress',title:'PDF export rendering incorrect Chinese fonts',labels:['bug'],assignee:3,due:'2025-05-20',priority:'high'},
+  {id:11,col:'progress',title:'Team workspace — invite & permissions',labels:['feature'],assignee:0,due:'2025-06-02',priority:'medium'},
+  {id:12,col:'progress',title:'Dark mode support for editor',labels:['design'],assignee:4,due:'2025-06-08',priority:'low'},
+  {id:13,col:'done',title:'Launch PaperMind Pro pricing tier',labels:['feature'],assignee:0,due:'2025-05-10',priority:'high'},
+  {id:14,col:'done',title:'Fix session timeout bug on mobile browsers',labels:['bug'],assignee:3,due:'2025-05-08',priority:'high'},
+  {id:15,col:'done',title:'Implement Google OAuth login',labels:['feature'],assignee:2,due:'2025-05-12',priority:'medium'},
+  {id:16,col:'done',title:'Update privacy policy for GDPR compliance',labels:['chore'],assignee:4,due:'2025-05-15',priority:'low'},
+];
+
+let activeFilter = 'all';
+let selectedCardId = null;
+let modalOpen = false;
+let inlineFormCol = null;
+let nextId = 17;
+
+function formatDue(dateStr){
+  const d = new Date(dateStr);
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  const month = d.getMonth()+1;
+  const day = d.getDate();
+  return {text: LANG==='zh' ? month+'月'+day+'日' : d.toLocaleDateString('en-US',{month:'short',day:'numeric'}), overdue: d < now};
+}
+
+function renderCard(card){
+  const av = AVATARS[card.assignee];
+  const due = formatDue(card.due);
+  const sel = selectedCardId === card.id ? ' selected' : '';
+  const labelsHtml = card.labels.map(l=>`<span class="label ${l}">${l}</span>`).join('');
+  return `<div class="card${sel}" id="card-${card.id}" data-id="${card.id}" onclick="handleCardClick(event,${card.id})">
+    <div class="card-labels">${labelsHtml}</div>
+    <div class="card-title">${card.title}</div>
+    <div class="card-footer">
+      <div class="card-assignee ${av.cls}">${av.initials}</div>
+      <span class="card-due${due.overdue?' overdue':''}">${due.text}</span>
+      <div class="priority ${card.priority}"></div>
+    </div>
+  </div>`;
+}
+
+function renderBoard(){
+  const cols = ['backlog','todo','progress','done'];
+  const search = document.getElementById('search-input').value.toLowerCase();
+  cols.forEach(col=>{
+    const list = document.getElementById('col-'+col);
+    const filtered = CARDS.filter(c=>c.col===col);
+    list.innerHTML = filtered.map(c=>{
+      const passFilter = activeFilter==='all' || c.labels.includes(activeFilter);
+      const passSearch = !search || c.title.toLowerCase().includes(search);
+      const html = renderCard(c);
+      return html.replace('class="card','class="card'+(passFilter&&passSearch?'':' hidden'));
+    }).join('');
+    if(inlineFormCol===col){
+      list.innerHTML += `<div class="inline-form" id="inline-form-${col}">
+        <input type="text" id="inline-input-${col}" placeholder="${t('add_title_ph')}" data-t-placeholder="add_title_ph" onkeydown="handleInlineKey(event,'${col}')">
+        <div class="inline-form-actions">
+          <button class="inline-btn confirm" onclick="submitInlineCard('${col}')" data-t="add_confirm_btn">${t('add_confirm_btn')}</button>
+          <button class="inline-btn cancel" onclick="cancelInlineForm()" data-t="add_cancel_btn">${t('add_cancel_btn')}</button>
+        </div>
+      </div>`;
+      setTimeout(()=>{ const inp = document.getElementById('inline-input-'+col); if(inp) inp.focus(); },50);
+    }
+    updateCount(col);
+  });
+  highlightDropTargets();
+}
+
+function updateCount(col){
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const count = CARDS.filter(c=>{
+    if(c.col!==col) return false;
+    const passFilter = activeFilter==='all'||c.labels.includes(activeFilter);
+    const passSearch = !search||c.title.toLowerCase().includes(search);
+    return passFilter&&passSearch;
+  }).length;
+  document.getElementById('count-'+col).textContent = count;
+}
+
+function applyFilters(){ renderBoard(); }
+
+function setFilter(f){
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
+  renderBoard();
+}
+
+function handleCardClick(e,id){
+  e.stopPropagation();
+  if(selectedCardId===id){
+    selectedCardId = null;
+    document.querySelectorAll('.column').forEach(c=>c.classList.remove('drop-ready'));
+    closeModal();
+  } else {
+    selectedCardId = id;
+    highlightDropTargets();
+    openModal(id);
+  }
+  renderBoard();
+}
+
+function highlightDropTargets(){
+  const cols = document.querySelectorAll('.col-move-target');
+  cols.forEach(col=>{
+    if(selectedCardId){
+      const card = CARDS.find(c=>c.id===selectedCardId);
+      col.classList.toggle('drop-ready', card && col.dataset.col !== card.col);
+    } else {
+      col.classList.remove('drop-ready');
+    }
+  });
+}
+
+function handleColClick(e,col){
+  if(!selectedCardId) return;
+  const card = CARDS.find(c=>c.id===selectedCardId);
+  if(!card||card.col===col) return;
+  if(e.target.closest('.card')||e.target.closest('.inline-form')||e.target.closest('.col-add-btn')) return;
+  moveCard(selectedCardId, col);
+}
+
+function moveCard(id, toCol){
+  const card = CARDS.find(c=>c.id===id);
+  if(!card) return;
+  card.col = toCol;
+  selectedCardId = null;
+  document.querySelectorAll('.column').forEach(c=>c.classList.remove('drop-ready'));
+  closeModal();
+  renderBoard();
+}
+
+function openModal(id){
+  const card = CARDS.find(c=>c.id===id);
+  if(!card) return;
+  modalOpen = true;
+  refreshModal();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function refreshModal(){
+  if(!selectedCardId) return;
+  const card = CARDS.find(c=>c.id===selectedCardId);
+  if(!card) return;
+  const av = AVATARS[card.assignee];
+  document.getElementById('modal-card-title').textContent = card.title;
+  document.getElementById('modal-card-labels').innerHTML = card.labels.map(l=>`<span class="label ${l}">${l}</span>`).join('');
+  const avEl = document.getElementById('modal-assignee-avatar');
+  avEl.className = 'card-assignee '+av.cls;
+  avEl.textContent = av.initials;
+  const due = formatDue(card.due);
+  document.getElementById('modal-due-date').textContent = due.text;
+  document.getElementById('modal-due-date').className = due.overdue ? 'overdue' : '';
+  const prioMap = {high:t('priority_high'),medium:t('priority_medium'),low:t('priority_low')};
+  document.getElementById('modal-priority-text').textContent = prioMap[card.priority] || card.priority;
+  const COLS = ['backlog','todo','progress','done'];
+  const colNames = {backlog:t('col_backlog'),todo:t('col_todo'),progress:t('col_progress'),done:t('col_done')};
+  document.getElementById('modal-move-btns').innerHTML = COLS.map(col=>{
+    const isCurrent = card.col===col;
+    return `<button class="modal-move-btn${isCurrent?' current-col':''}" ${isCurrent?'disabled':''} onclick="${isCurrent?'':''}" data-moveto="${col}" onclick="moveCardFromModal('${col}')">${colNames[col]}</button>`;
+  }).join('');
+  document.querySelectorAll('#modal-move-btns .modal-move-btn:not(.current-col)').forEach(btn=>{
+    btn.onclick = ()=>moveCardFromModal(btn.dataset.moveto);
+  });
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    if(I18N[LANG][el.dataset.t]) el.textContent = I18N[LANG][el.dataset.t];
+  });
+}
+
+function moveCardFromModal(col){
+  if(selectedCardId) moveCard(selectedCardId,col);
+  closeModal();
+}
+
+function closeModal(){
+  modalOpen = false;
+  selectedCardId = null;
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.querySelectorAll('.column').forEach(c=>c.classList.remove('drop-ready'));
+  renderBoard();
+}
+
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('modal-overlay')) closeModal();
+}
+
+function openAddCard(){
+  closeInlineForm();
+  document.getElementById('add-title-input').value='';
+  document.getElementById('add-modal-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('add-title-input').focus(),100);
+}
+
+function closeAddModal(){
+  document.getElementById('add-modal-overlay').classList.remove('open');
+}
+
+function handleAddOverlayClick(e){
+  if(e.target===document.getElementById('add-modal-overlay')) closeAddModal();
+}
+
+function submitAddCard(){
+  const title = document.getElementById('add-title-input').value.trim();
+  const col = document.getElementById('add-col-select').value;
+  const label = document.getElementById('add-label-select').value;
+  if(!title) return;
+  CARDS.push({id:nextId++,col,title,labels:[label],assignee:Math.floor(Math.random()*5),due:'2025-07-01',priority:'medium'});
+  closeAddModal();
+  renderBoard();
+}
+
+function openInlineForm(col,e){
+  e.stopPropagation();
+  inlineFormCol = col;
+  renderBoard();
+}
+
+function cancelInlineForm(){
+  inlineFormCol = null;
+  renderBoard();
+}
+
+function closeInlineForm(){
+  inlineFormCol = null;
+}
+
+function submitInlineCard(col){
+  const inp = document.getElementById('inline-input-'+col);
+  if(!inp) return;
+  const title = inp.value.trim();
+  if(!title){cancelInlineForm();return;}
+  CARDS.push({id:nextId++,col,title,labels:['feature'],assignee:0,due:'2025-07-01',priority:'medium'});
+  inlineFormCol = null;
+  renderBoard();
+}
+
+function handleInlineKey(e,col){
+  if(e.key==='Enter') submitInlineCard(col);
+  if(e.key==='Escape') cancelInlineForm();
+}
+
+renderBoard();
+</script>
+</body>
+</html>

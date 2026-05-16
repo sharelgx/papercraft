@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paperwork Dashboard</title>
+<style>
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --paper-warm:#F7F4EC; --paper-deep:#F3EEE4;
+  --ink:#171716; --muted:#706F68; --faint:#A09E96;
+  --line:#D8D1C3; --line-strong:#C8BBA8; --line-faint:#EAE5DA;
+  --clay:#C86645; --clay-dark:#A84D32; --clay-hover:#B55A3A; --clay-active:#953F28;
+  --clay-soft:#FBEDE6; --clay-border:#E8B49E;
+  --olive:#74845B; --olive-dark:#56663E; --olive-soft:#EDF1E7; --olive-border:#B8C9A3;
+  --amber:#B87A1A; --amber-soft:#FBF1DF; --amber-border:#DDB96A;
+  --red:#B83030; --red-soft:#FBEAEA; --red-border:#DDA0A0;
+  --blue:#2D6BB0; --blue-soft:#E8F0FB; --blue-border:#9DBAE8;
+  --font-serif:ui-serif,Georgia,"Times New Roman",serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sidebar-width:224px; --topbar-height:52px;
+  --radius-sm:6px; --radius-md:8px; --radius-lg:10px;
+  --shadow-sm:0 2px 6px rgba(23,23,22,.08); --shadow-md:0 4px 16px rgba(23,23,22,.10);
+  --ease-out:cubic-bezier(.22,1,.36,1); --dur-base:200ms; --dur-slow:300ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--paper);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line-faint);
+  gap: 10px;
+}
+
+.sidebar-logo-mark {
+  width: 28px;
+  height: 28px;
+  background: var(--clay);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.sidebar-nav {
+  padding: 12px 10px;
+  flex: 1;
+}
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding: 8px 10px 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 450;
+  transition: background var(--dur-base) var(--ease-out), color var(--dur-base);
+  user-select: none;
+}
+
+.nav-item:hover { background: var(--paper-warm); color: var(--ink); }
+
+.nav-item.active {
+  background: var(--clay-soft);
+  color: var(--clay-dark);
+  font-weight: 550;
+}
+
+.nav-icon { font-size: 16px; opacity: 0.75; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--clay);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 20px;
+  line-height: 1.6;
+}
+
+.sidebar-user {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line-faint);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 13px; font-weight: 550; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: var(--faint); }
+
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow: hidden; }
+
+.topbar {
+  height: var(--topbar-height);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 0 10px;
+  gap: 7px;
+  height: 32px;
+  margin-left: 8px;
+  flex: 1;
+  max-width: 240px;
+  transition: border-color var(--dur-base);
+}
+
+.topbar-search:focus-within { border-color: var(--clay-border); }
+
+.topbar-search svg { color: var(--faint); flex-shrink: 0; }
+
+.topbar-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: var(--ink);
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.topbar-search input::placeholder { color: var(--faint); }
+.topbar-spacer { flex: 1; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--dur-base), border-color var(--dur-base), color var(--dur-base), transform 80ms;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.btn-ghost:hover { background: var(--paper-warm); border-color: var(--line-strong); color: var(--ink); }
+
+.btn-primary { background: var(--clay); border: 1px solid var(--clay-dark); color: #fff; }
+.btn-primary:hover { background: var(--clay-hover); }
+
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  gap: 2px;
+}
+
+.lang-btn {
+  padding: 3px 10px;
+  border-radius: calc(var(--radius-md) - 2px);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-sans);
+  transition: background var(--dur-base), color var(--dur-base), border-color var(--dur-base);
+  user-select: none;
+}
+
+.lang-btn:hover { color: var(--ink); }
+
+.lang-btn.active {
+  background: var(--clay-soft);
+  color: var(--clay-dark);
+  border-color: var(--clay-border);
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+.kpi-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.kpi-label { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: 0.02em; margin-bottom: 6px; }
+.kpi-value { font-size: 26px; font-weight: 650; color: var(--ink); letter-spacing: -0.02em; line-height: 1; margin-bottom: 8px; font-feature-settings: "tnum"; }
+.kpi-delta { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+.kpi-delta.up { color: var(--olive-dark); }
+.kpi-delta.down { color: var(--red); }
+.kpi-delta-arrow { font-size: 10px; }
+
+.mid-row { display: grid; grid-template-columns: 1fr 300px; gap: 14px; }
+
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--line-faint);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-title { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.panel-sub { font-size: 12px; color: var(--faint); margin-top: 2px; }
+
+.chart-wrap { padding: 16px 20px 12px; }
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 160px;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 100%;
+  background: var(--clay-soft);
+  border: 1px solid var(--clay-border);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  position: relative;
+  transition: background var(--dur-base);
+  cursor: pointer;
+  min-height: 4px;
+}
+
+.bar:hover { background: var(--clay); border-color: var(--clay-dark); }
+.bar:hover .bar-tooltip { opacity: 1; pointer-events: auto; }
+
+.bar-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base);
+  z-index: 10;
+}
+
+.cat-list { padding: 8px 0; }
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--line-faint);
+}
+
+.cat-item:last-child { border-bottom: none; }
+.cat-rank { font-size: 12px; font-weight: 600; color: var(--faint); width: 16px; text-align: center; }
+.cat-info { flex: 1; min-width: 0; }
+.cat-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+
+.cat-bar-wrap {
+  width: 80px;
+  height: 4px;
+  background: var(--line-faint);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.cat-bar-fill { height: 100%; background: var(--clay); border-radius: 4px; }
+.cat-pct { font-size: 12px; font-weight: 600; color: var(--ink); font-feature-settings: "tnum"; min-width: 36px; text-align: right; }
+
+.table-panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.table-panel .panel-header { flex-wrap: wrap; gap: 10px; }
+
+.filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.tab {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  color: var(--muted);
+  background: transparent;
+  font-family: var(--font-sans);
+  transition: all var(--dur-base);
+  user-select: none;
+}
+
+.tab:hover { background: var(--paper-warm); color: var(--ink); }
+
+.tab.active {
+  background: var(--clay-soft);
+  border-color: var(--clay-border);
+  color: var(--clay-dark);
+}
+
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+
+thead th {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 16px;
+  background: var(--paper-warm);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--dur-base);
+}
+
+thead th:hover { color: var(--ink); }
+.sort-icon { display: inline-block; margin-left: 4px; font-size: 10px; opacity: 0.4; }
+.sort-icon.active { opacity: 1; color: var(--clay); }
+
+tbody tr { border-bottom: 1px solid var(--line-faint); transition: background var(--dur-base); cursor: pointer; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--paper-warm); }
+
+tbody td { padding: 11px 16px; font-size: 13px; color: var(--ink); vertical-align: middle; }
+
+.td-mono { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.badge-fulfilled { background: var(--olive-soft); border-color: var(--olive-border); color: var(--olive-dark); }
+.badge-fulfilled .badge-dot { background: var(--olive); }
+.badge-processing { background: var(--blue-soft); border-color: var(--blue-border); color: var(--blue); }
+.badge-processing .badge-dot { background: var(--blue); }
+.badge-pending { background: var(--amber-soft); border-color: var(--amber-border); color: var(--amber); }
+.badge-pending .badge-dot { background: var(--amber); }
+.badge-cancelled { background: var(--red-soft); border-color: var(--red-border); color: var(--red); }
+.badge-cancelled .badge-dot { background: var(--red); }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line-faint);
+}
+
+.page-info { font-size: 12px; color: var(--faint); }
+.page-btns { display: flex; gap: 4px; }
+
+.page-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--dur-base);
+  font-family: var(--font-sans);
+  user-select: none;
+}
+
+.page-btn:hover { background: var(--paper-warm); color: var(--ink); border-color: var(--line-strong); }
+.page-btn.active { background: var(--clay); border-color: var(--clay-dark); color: #fff; }
+.page-btn:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(23,23,22,0.25);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 90vw;
+  height: 100vh;
+  background: var(--paper);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+  z-index: 210;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.drawer.open { transform: translateX(0); }
+
+.drawer-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--line-faint);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.drawer-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+.drawer-sub { font-size: 12px; color: var(--faint); margin-top: 2px; }
+
+.drawer-close {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 16px;
+  transition: all var(--dur-base);
+  flex-shrink: 0;
+}
+
+.drawer-close:hover { background: var(--paper-warm); color: var(--ink); }
+
+.drawer-body { flex: 1; overflow-y: auto; padding: 20px; }
+
+.drawer-section { margin-bottom: 20px; }
+
+.drawer-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 10px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line-faint);
+  gap: 12px;
+}
+
+.detail-row:last-child { border-bottom: none; }
+.detail-key { font-size: 13px; color: var(--muted); }
+.detail-val { font-size: 13px; color: var(--ink); font-weight: 500; text-align: right; }
+
+.drawer-note-label { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+
+.drawer-note {
+  width: 100%;
+  min-height: 88px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: var(--ivory);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--dur-base);
+}
+
+.drawer-note:focus { border-color: var(--clay-border); }
+
+.drawer-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--line-faint);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 300;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 220px;
+  max-width: 340px;
+  animation: toastIn var(--dur-slow) var(--ease-out) forwards;
+}
+
+.toast.removing { animation: toastOut var(--dur-base) var(--ease-out) forwards; }
+.toast-icon { font-size: 15px; }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(6px) scale(0.97); }
+}
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .mid-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-mark">P</div>
+    <span class="sidebar-logo-text" data-t="brand"></span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label" data-t="nav_main"></div>
+    <div class="nav-item active" onclick="setActivePage(this)">
+      <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      <span data-t="nav_dashboard"></span>
+    </div>
+    <div class="nav-item" onclick="setActivePage(this)">
+      <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span data-t="nav_orders"></span>
+      <span class="nav-badge">12</span>
+    </div>
+    <div class="nav-item" onclick="setActivePage(this)">
+      <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span data-t="nav_customers"></span>
+    </div>
+    <div class="nav-item" onclick="setActivePage(this)">
+      <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span data-t="nav_reports"></span>
+    </div>
+    <div class="nav-label" data-t="nav_analytics" style="margin-top:8px;"></div>
+    <div class="nav-item" onclick="setActivePage(this)">
+      <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span data-t="nav_metrics"></span>
+    </div>
+    <div class="nav-item" onclick="setActivePage(this)">
+      <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2"/></svg>
+      <span data-t="nav_settings"></span>
+    </div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">AL</div>
+    <div class="user-info">
+      <div class="user-name" data-t="user_name"></div>
+      <div class="user-role" data-t="user_role"></div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <span class="topbar-title" data-t="page_title"></span>
+    <div class="topbar-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" data-t-placeholder="search_placeholder">
+    </div>
+    <div class="topbar-spacer"></div>
+    <button class="btn btn-ghost" onclick="doExport()" data-t="btn_export"></button>
+    <button class="btn btn-primary" onclick="doNewOrder()" data-t="btn_new_order"></button>
+    <div class="lang-toggle">
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="mid-row">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title" data-t="chart_title"></div>
+            <div class="panel-sub" data-t="chart_sub"></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-bars" id="chartBars"></div>
+          <div id="chartLabels"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title" data-t="cat_title"></div>
+        </div>
+        <div class="cat-list" id="catList"></div>
+      </div>
+    </div>
+
+    <div class="table-panel">
+      <div class="panel-header">
+        <div class="panel-title" data-t="orders_title"></div>
+        <div class="filter-tabs" id="filterTabs"></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span class="page-info" id="pageInfo"></span>
+        <div class="page-btns" id="pageBtns"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title" id="drawerTitle"></div>
+      <div class="drawer-sub" id="drawerSub"></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-footer">
+    <button class="btn btn-ghost" onclick="closeDrawer()" id="drawerCancelBtn" data-t="btn_cancel"></button>
+    <button class="btn btn-primary" onclick="saveDrawer()" id="drawerSaveBtn" data-t="btn_save"></button>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const I18N = {
+  en: {
+    brand: 'Paperwork',
+    nav_main: 'Main',
+    nav_analytics: 'Analytics',
+    nav_dashboard: 'Dashboard',
+    nav_orders: 'Orders',
+    nav_customers: 'Customers',
+    nav_reports: 'Reports',
+    nav_metrics: 'Metrics',
+    nav_settings: 'Settings',
+    user_name: 'Admin Liu',
+    user_role: 'Administrator',
+    page_title: 'Dashboard',
+    search_placeholder: 'Search orders…',
+    btn_export: 'Export',
+    btn_new_order: '+ New Order',
+    btn_cancel: 'Cancel',
+    btn_save: 'Save',
+    chart_title: 'Revenue Trend',
+    chart_sub: 'Sep – Apr (USD)',
+    cat_title: 'Top Categories',
+    orders_title: 'Recent Orders',
+    kpi_revenue: 'Revenue',
+    kpi_orders: 'Orders',
+    kpi_avg: 'Avg Order',
+    kpi_customers: 'Customers',
+    tab_all: 'All',
+    tab_fulfilled: 'Fulfilled',
+    tab_processing: 'Processing',
+    tab_pending: 'Pending',
+    tab_cancelled: 'Cancelled',
+    col_id: 'Order ID',
+    col_customer: 'Customer',
+    col_date: 'Date',
+    col_items: 'Items',
+    col_amount: 'Amount',
+    col_status: 'Status',
+    col_category: 'Category',
+    status_fulfilled: 'Fulfilled',
+    status_processing: 'Processing',
+    status_pending: 'Pending',
+    status_cancelled: 'Cancelled',
+    page_of: function(a, b, c) { return a + '–' + b + ' of ' + c + ' orders'; },
+    prev: '‹',
+    next: '›',
+    drawer_order: 'Order Details',
+    drawer_info: 'Order Info',
+    drawer_customer: 'Customer',
+    drawer_date: 'Date',
+    drawer_category: 'Category',
+    drawer_items: 'Items',
+    drawer_amount: 'Amount',
+    drawer_status: 'Status',
+    drawer_note_label: 'Internal Note',
+    drawer_note_placeholder: 'Add a note about this order…',
+    toast_export: 'CSV exported successfully',
+    toast_new_order: 'New order form opened',
+    toast_save: 'Note saved',
+    months: ['Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'],
+    cats: ['Electronics','Apparel','Home & Garden','Books','Sports'],
+    vs_last: 'vs last month',
+    up_icon: '↑',
+    dn_icon: '↓'
+  },
+  zh: {
+    brand: '纸工',
+    nav_main: '主菜单',
+    nav_analytics: '数据分析',
+    nav_dashboard: '控制台',
+    nav_orders: '订单',
+    nav_customers: '客户',
+    nav_reports: '报告',
+    nav_metrics: '指标',
+    nav_settings: '设置',
+    user_name: '管理员刘',
+    user_role: '超级管理员',
+    page_title: '控制台',
+    search_placeholder: '搜索订单…',
+    btn_export: '导出',
+    btn_new_order: '+ 新建订单',
+    btn_cancel: '取消',
+    btn_save: '保存',
+    chart_title: '营收趋势',
+    chart_sub: '9月 – 4月（美元）',
+    cat_title: '热门分类',
+    orders_title: '近期订单',
+    kpi_revenue: '营收',
+    kpi_orders: '订单数',
+    kpi_avg: '均单价',
+    kpi_customers: '客户数',
+    tab_all: '全部',
+    tab_fulfilled: '已完成',
+    tab_processing: '处理中',
+    tab_pending: '待处理',
+    tab_cancelled: '已取消',
+    col_id: '订单编号',
+    col_customer: '客户',
+    col_date: '日期',
+    col_items: '商品数',
+    col_amount: '金额',
+    col_status: '状态',
+    col_category: '分类',
+    status_fulfilled: '已完成',
+    status_processing: '处理中',
+    status_pending: '待处理',
+    status_cancelled: '已取消',
+    page_of: function(a, b, c) { return '共 ' + c + ' 条，显示 ' + a + '–' + b; },
+    prev: '‹',
+    next: '›',
+    drawer_order: '订单详情',
+    drawer_info: '基本信息',
+    drawer_customer: '客户',
+    drawer_date: '日期',
+    drawer_category: '分类',
+    drawer_items: '商品数',
+    drawer_amount: '金额',
+    drawer_status: '状态',
+    drawer_note_label: '内部备注',
+    drawer_note_placeholder: '添加关于此订单的备注…',
+    toast_export: 'CSV 导出成功',
+    toast_new_order: '已打开新建订单表单',
+    toast_save: '备注已保存',
+    months: ['9月','10月','11月','12月','1月','2月','3月','4月'],
+    cats: ['电子产品','服饰','家居园艺','图书','运动'],
+    vs_last: '较上月',
+    up_icon: '↑',
+    dn_icon: '↓'
+  }
+};
+
+var LANG = 'zh';
+function t(key) { return I18N[LANG][key]; }
+
+var ORDERS = [
+  { id:'ORD-1001', customer:'Yuki Tanaka',   date:'2025-04-12', items:3, amount:248.50, status:'fulfilled',  category:'Electronics' },
+  { id:'ORD-1002', customer:'Marco Rivera',  date:'2025-04-11', items:1, amount:89.00,  status:'processing', category:'Apparel' },
+  { id:'ORD-1003', customer:'Priya Nair',    date:'2025-04-10', items:5, amount:512.75, status:'fulfilled',  category:'Home & Garden' },
+  { id:'ORD-1004', customer:'Liam O\'Brien', date:'2025-04-09', items:2, amount:134.20, status:'pending',    category:'Books' },
+  { id:'ORD-1005', customer:'Amara Osei',    date:'2025-04-08', items:4, amount:367.00, status:'fulfilled',  category:'Sports' },
+  { id:'ORD-1006', customer:'Chen Wei',      date:'2025-04-07', items:1, amount:56.40,  status:'cancelled',  category:'Books' },
+  { id:'ORD-1007', customer:'Sofia Delgado', date:'2025-04-06', items:6, amount:890.00, status:'processing', category:'Electronics' },
+  { id:'ORD-1008', customer:'Kenji Mori',    date:'2025-04-05', items:2, amount:178.90, status:'fulfilled',  category:'Apparel' },
+  { id:'ORD-1009', customer:'Aisha Hassan',  date:'2025-04-04', items:3, amount:299.50, status:'pending',    category:'Home & Garden' },
+  { id:'ORD-1010', customer:'Ravi Sharma',   date:'2025-04-03', items:1, amount:45.00,  status:'fulfilled',  category:'Books' },
+  { id:'ORD-1011', customer:'Elena Popescu', date:'2025-04-02', items:4, amount:634.80, status:'processing', category:'Electronics' },
+  { id:'ORD-1012', customer:'Diego Morales', date:'2025-04-01', items:2, amount:203.60, status:'fulfilled',  category:'Sports' }
+];
+
+var CHART_DATA = [32400, 28900, 41200, 38700, 52100, 47300, 61500, 58900];
+
+var CAT_DATA = [
+  { key:0, pct:38 },
+  { key:1, pct:27 },
+  { key:2, pct:18 },
+  { key:3, pct:10 },
+  { key:4, pct:7 }
+];
+
+var KPI_DATA = [
+  { key:'kpi_revenue',   value:'$58,900', delta:'+12.4%', dir:'up' },
+  { key:'kpi_orders',    value:'12',      delta:'+3',     dir:'up' },
+  { key:'kpi_avg',       value:'$226.50', delta:'-2.1%',  dir:'down' },
+  { key:'kpi_customers', value:'9',       delta:'+1',     dir:'up' }
+];
+
+var STATUS_KEYS = ['all','fulfilled','processing','pending','cancelled'];
+
+var currentFilter = 'all';
+var currentPage = 1;
+var PAGE_SIZE = 5;
+var sortKey = 'date';
+var sortAsc = false;
+var searchQuery = '';
+var activeDrawerOrder = null;
+
+function setLang(l) {
+  LANG = l;
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', l === 'zh');
+  rerenderAll();
+}
+
+function rerenderAll() {
+  document.querySelectorAll('[data-t]').forEach(function(el) {
+    var key = el.getAttribute('data-t');
+    var val = t(key);
+    if (typeof val === 'string') el.textContent = val;
+  });
+  document.querySelectorAll('[data-t-placeholder]').forEach(function(el) {
+    var key = el.getAttribute('data-t-placeholder');
+    el.placeholder = t(key);
+  });
+  renderKPI();
+  renderChart();
+  renderCategories();
+  renderFilterTabs();
+  renderTable();
+}
+
+function renderKPI() {
+  var grid = document.getElementById('kpiGrid');
+  grid.innerHTML = KPI_DATA.map(function(d) {
+    return '<div class="kpi-card">'
+      + '<div class="kpi-label">' + t(d.key) + '</div>'
+      + '<div class="kpi-value">' + d.value + '</div>'
+      + '<div class="kpi-delta ' + d.dir + '">'
+      + '<span class="kpi-delta-arrow">' + (d.dir === 'up' ? t('up_icon') : t('dn_icon')) + '</span>'
+      + '<span>' + d.delta + ' ' + t('vs_last') + '</span>'
+      + '</div></div>';
+  }).join('');
+}
+
+function renderChart() {
+  var maxVal = Math.max.apply(null, CHART_DATA);
+  var bars = document.getElementById('chartBars');
+  var labels = document.getElementById('chartLabels');
+  var months = t('months');
+
+  bars.innerHTML = CHART_DATA.map(function(v, i) {
+    var h = Math.round((v / maxVal) * 140);
+    var fmt = '$' + (v / 1000).toFixed(1) + 'k';
+    return '<div class="bar-group">'
+      + '<div class="bar" style="height:' + h + 'px">'
+      + '<div class="bar-tooltip">' + months[i] + ': ' + fmt + '</div>'
+      + '</div></div>';
+  }).join('');
+
+  labels.style.cssText = 'display:flex;gap:10px;margin-top:6px;';
+  labels.innerHTML = months.map(function(m) {
+    return '<div style="flex:1;text-align:center;font-size:11px;color:var(--faint)">' + m + '</div>';
+  }).join('');
+}
+
+function renderCategories() {
+  var cats = t('cats');
+  document.getElementById('catList').innerHTML = CAT_DATA.map(function(d, i) {
+    return '<div class="cat-item">'
+      + '<div class="cat-rank">' + (i + 1) + '</div>'
+      + '<div class="cat-info">'
+      + '<div class="cat-name">' + cats[d.key] + '</div>'
+      + '<div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:' + d.pct + '%"></div></div>'
+      + '</div>'
+      + '<div class="cat-pct">' + d.pct + '%</div>'
+      + '</div>';
+  }).join('');
+}
+
+function renderFilterTabs() {
+  document.getElementById('filterTabs').innerHTML = STATUS_KEYS.map(function(k) {
+    return '<button class="tab ' + (currentFilter === k ? 'active' : '') + '" onclick="setFilter(\'' + k + '\')">' + t('tab_' + k) + '</button>';
+  }).join('');
+}
+
+function getStatusBadge(s) {
+  return '<span class="badge badge-' + s + '"><span class="badge-dot"></span>' + t('status_' + s) + '</span>';
+}
+
+function getCatLabel(catEn) {
+  var cats_en = I18N.en.cats;
+  var cats_t = t('cats');
+  var idx = cats_en.indexOf(catEn);
+  return idx >= 0 ? cats_t[idx] : catEn;
+}
+
+function getFilteredSorted() {
+  var rows = ORDERS.slice();
+  if (currentFilter !== 'all') {
+    rows = rows.filter(function(r) { return r.status === currentFilter; });
+  }
+  if (searchQuery) {
+    var q = searchQuery.toLowerCase();
+    rows = rows.filter(function(r) {
+      return r.id.toLowerCase().indexOf(q) >= 0 ||
+             r.customer.toLowerCase().indexOf(q) >= 0 ||
+             r.category.toLowerCase().indexOf(q) >= 0;
+    });
+  }
+  rows.sort(function(a, b) {
+    var av = a[sortKey], bv = b[sortKey];
+    if (typeof av === 'string') { av = av.toLowerCase(); bv = bv.toLowerCase(); }
+    if (av < bv) return sortAsc ? -1 : 1;
+    if (av > bv) return sortAsc ? 1 : -1;
+    return 0;
+  });
+  return rows;
+}
+
+function renderTable() {
+  var cols = [
+    { key:'id',       labelKey:'col_id' },
+    { key:'customer', labelKey:'col_customer' },
+    { key:'date',     labelKey:'col_date' },
+    { key:'items',    labelKey:'col_items' },
+    { key:'amount',   labelKey:'col_amount' },
+    { key:'category', labelKey:'col_category' },
+    { key:'status',   labelKey:'col_status' }
+  ];
+
+  document.getElementById('tableHead').innerHTML = '<tr>' + cols.map(function(c) {
+    var isSorted = sortKey === c.key;
+    var icon = isSorted ? (sortAsc ? '↑' : '↓') : '↕';
+    return '<th onclick="doSort(\'' + c.key + '\')">' + t(c.labelKey)
+      + '<span class="sort-icon ' + (isSorted ? 'active' : '') + '">' + icon + '</span></th>';
+  }).join('') + '</tr>';
+
+  var rows = getFilteredSorted();
+  var total = rows.length;
+  var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  var start = (currentPage - 1) * PAGE_SIZE;
+  var pageRows = rows.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('tableBody').innerHTML = pageRows.map(function(r) {
+    return '<tr onclick="openDrawer(\'' + r.id + '\')">'
+      + '<td class="td-mono">' + r.id + '</td>'
+      + '<td style="font-weight:500">' + r.customer + '</td>'
+      + '<td style="color:var(--muted)">' + r.date + '</td>'
+      + '<td style="color:var(--muted)">' + r.items + '</td>'
+      + '<td style="font-weight:500;font-feature-settings:\'tnum\'">$' + r.amount.toFixed(2) + '</td>'
+      + '<td style="color:var(--muted)">' + getCatLabel(r.category) + '</td>'
+      + '<td>' + getStatusBadge(r.status) + '</td>'
+      + '</tr>';
+  }).join('') || '<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--faint)">—</td></tr>';
+
+  var a = total === 0 ? 0 : start + 1;
+  var b = Math.min(start + PAGE_SIZE, total);
+  document.getElementById('pageInfo').textContent = t('page_of')(a, b, total);
+
+  var html = '<button class="page-btn" onclick="changePage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? 'disabled' : '') + '>' + t('prev') + '</button>';
+  for (var p = 1; p <= totalPages; p++) {
+    html += '<button class="page-btn ' + (p === currentPage ? 'active' : '') + '" onclick="changePage(' + p + ')">' + p + '</button>';
+  }
+  html += '<button class="page-btn" onclick="changePage(' + (currentPage + 1) + ')" ' + (currentPage === totalPages || total === 0 ? 'disabled' : '') + '>' + t('next') + '</button>';
+  document.getElementById('pageBtns').innerHTML = html;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  currentPage = 1;
+  renderFilterTabs();
+  renderTable();
+}
+
+function doSort(key) {
+  if (sortKey === key) { sortAsc = !sortAsc; }
+  else { sortKey = key; sortAsc = true; }
+  renderTable();
+}
+
+function changePage(p) {
+  var rows = getFilteredSorted();
+  var totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderTable();
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  searchQuery = this.value;
+  currentPage = 1;
+  renderTable();
+});
+
+function openDrawer(orderId) {
+  var o = null;
+  for (var i = 0; i < ORDERS.length; i++) {
+    if (ORDERS[i].id === orderId) { o = ORDERS[i]; break; }
+  }
+  if (!o) return;
+  activeDrawerOrder = o;
+
+  document.getElementById('drawerTitle').textContent = t('drawer_order') + ' — ' + o.id;
+  document.getElementById('drawerSub').textContent = o.customer;
+  document.getElementById('drawerCancelBtn').textContent = t('btn_cancel');
+  document.getElementById('drawerSaveBtn').textContent = t('btn_save');
+
+  document.getElementById('drawerBody').innerHTML =
+    '<div class="drawer-section">'
+    + '<div class="drawer-section-title">' + t('drawer_info') + '</div>'
+    + '<div class="detail-row"><span class="detail-key">' + t('drawer_customer') + '</span><span class="detail-val">' + o.customer + '</span></div>'
+    + '<div class="detail-row"><span class="detail-key">' + t('drawer_date') + '</span><span class="detail-val">' + o.date + '</span></div>'
+    + '<div class="detail-row"><span class="detail-key">' + t('drawer_category') + '</span><span class="detail-val">' + getCatLabel(o.category) + '</span></div>'
+    + '<div class="detail-row"><span class="detail-key">' + t('drawer_items') + '</span><span class="detail-val">' + o.items + '</span></div>'
+    + '<div class="detail-row"><span class="detail-key">' + t('drawer_amount') + '</span><span class="detail-val">$' + o.amount.toFixed(2) + '</span></div>'
+    + '<div class="detail-row"><span class="detail-key">' + t('drawer_status') + '</span><span class="detail-val">' + getStatusBadge(o.status) + '</span></div>'
+    + '</div>'
+    + '<div class="drawer-section">'
+    + '<div class="drawer-note-label">' + t('drawer_note_label') + '</div>'
+    + '<textarea class="drawer-note" id="drawerNote" placeholder="' + t('drawer_note_placeholder') + '"></textarea>'
+    + '</div>';
+
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  activeDrawerOrder = null;
+}
+
+function saveDrawer() {
+  closeDrawer();
+  showToast(t('toast_save'), 'ok');
+}
+
+function showToast(msg, type) {
+  var container = document.getElementById('toastContainer');
+  var el = document.createElement('div');
+  el.className = 'toast';
+  var icon = type === 'ok' ? '✓' : '!';
+  el.innerHTML = '<span class="toast-icon">' + icon + '</span><span>' + msg + '</span>';
+  container.appendChild(el);
+  setTimeout(function() {
+    el.classList.add('removing');
+    setTimeout(function() { el.remove(); }, 200);
+  }, 2800);
+}
+
+function doExport() {
+  var rows = getFilteredSorted();
+  var headers = ['Order ID','Customer','Date','Items','Amount','Category','Status'];
+  var csv = [headers.join(',')].concat(rows.map(function(r) {
+    return [r.id, '"' + r.customer + '"', r.date, r.items, r.amount.toFixed(2), '"' + r.category + '"', r.status].join(',');
+  })).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'orders.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(t('toast_export'), 'ok');
+}
+
+function doNewOrder() {
+  showToast(t('toast_new_order'), 'ok');
+}
+
+function setActivePage(el) {
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+rerenderAll();
+</script>
+</body>
+</html>

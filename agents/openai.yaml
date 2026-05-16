@@ -1,4 +1,4 @@
 interface:
-  display_name: "Claude Paper Web Design"
-  short_description: "Claude paper web visual design"
-  default_prompt: "Design a web page or app screen using the Claude paper visual language: warm paper backgrounds, serif editorial headings, clay and olive accents, fine borders, calm spacing, and practical interactive controls."
+  display_name: "PagerCraft"
+  short_description: "Claude paper web, PPT, and mobile UI design"
+  default_prompt: "Use PagerCraft to design a polished Claude paper-style web page, interactive HTML artifact, PPT-style deck, or mobile app screen with warm paper backgrounds, serif editorial headings, clay and olive accents, fine borders, and practical controls."
