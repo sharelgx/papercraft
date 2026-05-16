@@ -416,8 +416,12 @@ Core mobile components:
 - **Bottom navigation:** use for top-level app areas; keep labels short and icons simple.
 - **Segmented control:** use for local mode switching inside one screen.
 - **Mobile list card:** icon/status mark + title + one-line detail; avoid desktop table compression.
+- **Profile card:** avatar, status line, and one compact progress or membership indicator.
+- **Form controls:** input, textarea, select, switch, stepper, slider, and validation states sized for touch.
 - **Bottom sheet:** use for filters, quick create, confirmation, and secondary actions.
+- **Modal:** reserve for destructive or high-importance confirmation.
 - **Toast:** short confirmation near the bottom, above the tab bar.
+- **State blocks:** skeleton loading, progress, empty state, success/warning list rows.
 
 Mobile layouts should be designed natively for the narrow viewport. Do not simply stack every desktop panel or nest cards inside larger cards.
 

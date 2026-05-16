@@ -167,9 +167,9 @@ Structure: optional phone shell for demo framing, native app surface, status bar
 
 Useful controls: bottom navigation, segmented controls, search, list filtering, bottom sheet actions, toast feedback.
 
-Core components: app bar, bottom tab bar, mobile hero card, metric pair, list card, segmented control, search field, bottom sheet, toast.
+Core components: app bar, bottom tab bar, mobile hero card, metric pair, list card, profile card, segmented control, search field, chips, inputs, textarea, select, switch, stepper, slider, bottom sheet, modal, toast, skeleton, progress, empty state.
 
-Example from this skill: `examples/mobile.html` — bilingual mobile app prototype with phone shell, tabs, search, segmented control, bottom sheet, and toast.
+Example from this skill: `examples/mobile.html` — bilingual mobile component kit with phone shell, tabs, forms, selectors, bottom sheets, modal, toast, loading states, and empty states.
 
 ---
 

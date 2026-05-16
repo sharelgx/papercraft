@@ -30,7 +30,7 @@ Before writing any code, read the relevant files:
    - `examples/landing.html` — Product landing page: hero, features, how-it-works, testimonials, pricing, footer. *(EN/ZH)*
    - `examples/kanban.html` — Kanban board: columns, cards with labels/assignee/due date, move modal, filters. *(EN/ZH)*
    - `examples/presentation.html` — PPT-style deck: adaptive 16:9 slides, thumbnails, mixed-media and code slides, keyboard navigation, presenter notes, fullscreen. *(EN/ZH)*
-   - `examples/mobile.html` — Mobile app prototype: phone shell, topbar, bottom tabs, segmented control, bottom sheet, toast. *(EN/ZH)*
+   - `examples/mobile.html` — Mobile component kit: phone shell, app bar, bottom tabs, chips, lists, profile card, forms, switches, steppers, slider, bottom sheets, modal, toast, loading and empty states. *(EN/ZH)*
    - `examples/components.html` — Full design system showcase: all tokens, all component states, PPT/mobile components, live demos. *(EN/ZH)*
 
 Do not generate from description alone when a matching example exists.

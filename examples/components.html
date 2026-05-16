@@ -555,11 +555,14 @@ const I18N = {
     ppt_notes_body: 'HTML deck 中备注区应该独立于 slide canvas；PPTX 中可转为 speaker notes。',
     // mobile
     mobile_title: '手机端 App 外壳',
-    mobile_body: '适合 App 首页、订单流、内容流和移动端工作台。不要把桌面表格直接缩小。',
+    mobile_body: '适合 App 首页、订单流、内容流和移动端工作台。包含导航、表单、浮层与状态组件，不要把桌面表格直接缩小。',
     mobile_item_1: '顶部栏 / App Bar',
     mobile_item_2: '底部导航 / Bottom Tabs',
     mobile_item_3: '分段控件 / Segmented Control',
-    mobile_item_4: '底部面板 / Bottom Sheet',
+    mobile_item_4: '表单控件 / Forms',
+    mobile_item_5: '底部面板 / Bottom Sheet',
+    mobile_item_6: '弹窗与反馈 / Modal & Toast',
+    mobile_item_7: '加载与空状态 / States',
     mobile_sheet_title: '移动端操作面板',
     mobile_sheet_body: '筛选、确认、快速新建等二级操作优先放在 bottom sheet，而不是挤进顶部栏。',
     // overlays
@@ -693,11 +696,14 @@ const I18N = {
     ppt_notes_title: 'Speaker Notes',
     ppt_notes_body: 'In HTML decks, notes should stay outside the slide canvas; in PPTX, map them to speaker notes.',
     mobile_title: 'Mobile App Shell',
-    mobile_body: 'For app home screens, order flows, content feeds, and mobile workspaces. Do not shrink desktop tables into a phone.',
+    mobile_body: 'For app home screens, order flows, content feeds, and mobile workspaces. Includes navigation, forms, layers, and states. Do not shrink desktop tables into a phone.',
     mobile_item_1: 'Top app bar',
     mobile_item_2: 'Bottom tabs',
     mobile_item_3: 'Segmented control',
-    mobile_item_4: 'Bottom sheet',
+    mobile_item_4: 'Form controls',
+    mobile_item_5: 'Bottom sheet',
+    mobile_item_6: 'Modal and toast',
+    mobile_item_7: 'Loading and empty states',
     mobile_sheet_title: 'Mobile Action Sheet',
     mobile_sheet_body: 'Put filters, confirmations, and quick-create flows in a bottom sheet instead of crowding the top bar.',
     open_modal: 'Open Modal',
@@ -1216,6 +1222,9 @@ function renderMobile() {
           <li>${t('mobile_item_2')}</li>
           <li>${t('mobile_item_3')}</li>
           <li>${t('mobile_item_4')}</li>
+          <li>${t('mobile_item_5')}</li>
+          <li>${t('mobile_item_6')}</li>
+          <li>${t('mobile_item_7')}</li>
         </ul>
       </div>
       <div class="spec-card">

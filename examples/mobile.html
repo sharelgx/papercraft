@@ -3,64 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PagerCraft — Mobile App Example</title>
+<title>PagerCraft — Mobile Component Kit</title>
 <style>
 :root{
   --ivory:#FAF9F5;--paper:#FFFFFF;--paper-warm:#F7F4EC;--paper-deep:#F3EEE4;--ink:#171716;--muted:#706F68;--faint:#A09E96;
-  --line:#D8D1C3;--line-strong:#C8BBA8;--line-faint:#EAE5DA;--clay:#C86645;--clay-dark:#A84D32;--clay-soft:#FBEDE6;--clay-border:#E8B49E;
-  --olive:#74845B;--olive-dark:#56663E;--olive-soft:#EDF1E7;--olive-border:#B8C9A3;--amber:#B87A1A;--amber-soft:#FBF1DF;--red:#B83030;--red-soft:#FBEAEA;
-  --font-serif:ui-serif,Georgia,"Times New Roman",serif;--font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
-  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--radius-sm:6px;--radius-md:8px;--radius-lg:10px;--shadow-md:0 8px 34px rgba(23,23,22,.14)
+  --line:#D8D1C3;--line-strong:#C8BBA8;--line-faint:#EAE5DA;--clay:#C86645;--clay-dark:#A84D32;--clay-hover:#B55A3A;--clay-soft:#FBEDE6;--clay-border:#E8B49E;
+  --olive:#74845B;--olive-dark:#56663E;--olive-soft:#EDF1E7;--olive-border:#B8C9A3;--amber:#B87A1A;--amber-soft:#FBF1DF;--red:#B83030;--red-soft:#FBEAEA;--blue:#2D6BB0;--blue-soft:#E8F0FB;
+  --font-serif:ui-serif,Georgia,"Times New Roman",serif;--font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;--font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius-sm:6px;--radius-md:8px;--radius-lg:10px;--shadow-sm:0 2px 6px rgba(23,23,22,.08);--shadow-md:0 8px 34px rgba(23,23,22,.14)
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100vh;background:var(--ivory);font-family:var(--font-sans);color:var(--ink)}
-button,input{font:inherit}button{border:0;background:none;cursor:pointer;color:inherit}
-.workspace{min-height:100vh;display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center;max-width:1180px;margin:0 auto;padding:34px}
+html,body{min-height:100%;overflow-x:hidden}
+body{background:var(--ivory);font-family:var(--font-sans);color:var(--ink);font-size:15px}
+button,input,textarea,select{font:inherit}button{border:0;background:none;cursor:pointer;color:inherit}
+.workspace{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:34px;align-items:center;max-width:1220px;margin:0 auto;padding:32px}
 .copy h1{font-family:var(--font-serif);font-size:46px;line-height:1.05;margin-bottom:14px}.copy h1 span{color:var(--clay)}
-.copy p{font-size:17px;line-height:1.7;color:var(--muted);max-width:620px;margin-bottom:22px}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
-.tag{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
-.lang-toggle{display:inline-flex;gap:3px;border:1px solid var(--line);background:var(--paper-warm);border-radius:var(--radius-md);padding:3px}
-.lang-btn{height:30px;padding:0 10px;border-radius:6px;font-size:12px}.lang-btn.active{background:var(--clay-soft);color:var(--clay-dark);font-weight:700;border:1px solid var(--clay-border)}
-.component-sheet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:30px;max-width:660px}
-.component{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px}.component strong{display:block;font-family:var(--font-serif);font-size:17px;margin-bottom:6px}.component span{font-size:13px;color:var(--muted);line-height:1.55}
-.phone-shell{justify-self:center;width:390px;max-width:calc(100vw - 28px);height:780px;max-height:calc(100vh - 36px);background:#1e1d1a;border-radius:42px;padding:13px;box-shadow:var(--shadow-md)}
+.copy p{font-size:17px;line-height:1.7;color:var(--muted);max-width:650px;margin-bottom:22px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.tag{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
+.lang-toggle{display:inline-flex;gap:3px;border:1px solid var(--line);background:var(--paper-warm);border-radius:var(--radius-md);padding:3px}.lang-btn{height:30px;padding:0 10px;border-radius:6px;font-size:12px}.lang-btn.active{background:var(--clay-soft);color:var(--clay-dark);font-weight:700;border:1px solid var(--clay-border)}
+.component-sheet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:28px;max-width:720px}
+.component{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:13px;min-height:92px}.component strong{display:block;font-family:var(--font-serif);font-size:16px;margin-bottom:5px}.component span{font-size:12px;color:var(--muted);line-height:1.48}
+.phone-shell{justify-self:center;width:390px;max-width:calc(100vw - 28px);height:820px;max-height:calc(100vh - 28px);background:#1e1d1a;border-radius:42px;padding:13px;box-shadow:var(--shadow-md)}
 .phone{height:100%;background:var(--ivory);border-radius:32px;overflow:hidden;display:flex;flex-direction:column;position:relative}
-.status{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:700}.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:96px;height:24px;background:#1e1d1a;border-radius:0 0 16px 16px}
-.appbar{padding:12px 18px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line-faint)}
-.app-title{font-family:var(--font-serif);font-size:24px;font-weight:700}.icon-btn{width:34px;height:34px;border:1px solid var(--line);background:var(--paper);border-radius:12px;display:grid;place-items:center;color:var(--muted)}
-.screen{flex:1;overflow:auto;padding:16px 16px 90px;display:none}.screen.active{display:block}
-.hero-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}.hero-kicker{font-family:var(--font-mono);font-size:11px;color:var(--clay-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-.hero-title{font-family:var(--font-serif);font-size:30px;line-height:1.08;margin-bottom:8px}.hero-body{color:var(--muted);font-size:13px;line-height:1.55}
-.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.metric{background:var(--paper-warm);border:1px solid var(--line);border-radius:14px;padding:13px}.metric b{font-family:var(--font-serif);font-size:27px}.metric span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
-.list{display:flex;flex-direction:column;gap:10px}.item{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:13px;display:flex;gap:12px;align-items:flex-start}.dot{width:34px;height:34px;border-radius:12px;background:var(--clay-soft);border:1px solid var(--clay-border);display:grid;place-items:center;color:var(--clay-dark);font-weight:800;flex:0 0 auto}.item h3{font-size:14px;margin-bottom:4px}.item p{font-size:12px;color:var(--muted);line-height:1.45}
-.seg{display:flex;background:var(--paper-warm);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:14px}.seg button{flex:1;height:34px;border-radius:10px;font-size:13px;color:var(--muted)}.seg button.active{background:var(--paper);color:var(--clay-dark);font-weight:700;box-shadow:0 1px 3px rgba(23,23,22,.08)}
-.search{height:42px;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:0 13px;width:100%;margin-bottom:12px;color:var(--ink);outline:0}.search:focus{border-color:var(--clay-border);box-shadow:0 0 0 3px rgba(200,102,69,.12)}
-.sheet{position:absolute;left:10px;right:10px;bottom:76px;background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 10px 34px rgba(23,23,22,.16);display:none}.sheet.show{display:block}.sheet-handle{width:44px;height:4px;border-radius:9px;background:var(--line);margin:0 auto 14px}.sheet-title{font-family:var(--font-serif);font-size:20px;margin-bottom:6px}.sheet p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:12px}
-.btn{height:38px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 12px;font-size:13px}.btn.primary{background:var(--clay);border-color:var(--clay);color:#fff}.actions{display:flex;gap:8px}
-.tabbar{position:absolute;left:0;right:0;bottom:0;height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:7px 8px 10px}
-.tab{border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:var(--muted)}.tab svg{width:19px;height:19px}.tab.active{background:var(--clay-soft);color:var(--clay-dark);font-weight:700}
-.toast{position:absolute;left:20px;right:20px;bottom:88px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;font-size:13px;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none}.toast.show{opacity:1;transform:translateY(0)}
-@media(max-width:940px){.workspace{grid-template-columns:1fr;padding:18px;gap:24px}.copy h1{font-size:34px}.component-sheet{grid-template-columns:1fr}.phone-shell{height:760px}}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:96px;height:24px;background:#1e1d1a;border-radius:0 0 16px 16px;z-index:3}.status{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:700}
+.appbar{padding:11px 16px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line-faint);background:rgba(250,249,245,.92);backdrop-filter:blur(10px)}
+.app-title{font-family:var(--font-serif);font-size:23px;font-weight:700}.icon-btn{width:36px;height:36px;border:1px solid var(--line);background:var(--paper);border-radius:12px;display:grid;place-items:center;color:var(--muted);font-weight:700}
+.screen{flex:1;overflow:auto;padding:14px 14px 92px;display:none}.screen.active{display:block}
+.section-label{font-family:var(--font-mono);font-size:11px;color:var(--clay-dark);letter-spacing:.06em;text-transform:uppercase;margin:2px 0 9px}.section-title{font-family:var(--font-serif);font-size:23px;margin-bottom:10px}
+.hero-card,.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}.hero-title{font-family:var(--font-serif);font-size:29px;line-height:1.08;margin-bottom:8px}.hero-body,.muted{color:var(--muted);font-size:13px;line-height:1.55}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}.metric{background:var(--paper-warm);border:1px solid var(--line);border-radius:14px;padding:12px}.metric b{font-family:var(--font-serif);font-size:27px}.metric span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.chips{display:flex;gap:7px;overflow:auto;padding-bottom:2px;margin-bottom:12px}.chip{white-space:nowrap;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted)}.chip.active{background:var(--clay-soft);border-color:var(--clay-border);color:var(--clay-dark);font-weight:700}
+.list{display:flex;flex-direction:column;gap:9px}.item{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:11px;align-items:flex-start}.dot{width:34px;height:34px;border-radius:12px;background:var(--clay-soft);border:1px solid var(--clay-border);display:grid;place-items:center;color:var(--clay-dark);font-weight:800;flex:0 0 auto}.item h3{font-size:14px;margin-bottom:4px}.item p{font-size:12px;color:var(--muted);line-height:1.45}.item .right{margin-left:auto;color:var(--faint);font-family:var(--font-mono);font-size:11px}
+.search,.field,select,textarea{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:14px;color:var(--ink);outline:0}.search,.field,select{height:42px;padding:0 13px}textarea{min-height:82px;padding:11px 13px;resize:none}.search:focus,.field:focus,select:focus,textarea:focus{border-color:var(--clay-border);box-shadow:0 0 0 3px rgba(200,102,69,.12)}
+.seg{display:flex;background:var(--paper-warm);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:12px}.seg button{flex:1;height:34px;border-radius:10px;font-size:13px;color:var(--muted)}.seg button.active{background:var(--paper);color:var(--clay-dark);font-weight:700;box-shadow:0 1px 3px rgba(23,23,22,.08)}
+.form-grid{display:grid;gap:10px}.form-label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.form-row{margin-bottom:12px}
+.switch-row,.check-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:9px}.switch{width:48px;height:28px;border-radius:999px;background:var(--line);padding:3px;transition:.2s}.switch span{display:block;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:var(--shadow-sm)}.switch.on{background:var(--clay)}.switch.on span{transform:translateX(20px)}
+.stepper{display:flex;align-items:center;gap:10px}.stepper button{width:34px;height:34px;border-radius:12px;border:1px solid var(--line);background:var(--paper);font-weight:800}.stepper strong{min-width:28px;text-align:center;font-family:var(--font-serif);font-size:22px}.range{width:100%;accent-color:var(--clay)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{height:38px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 12px;font-size:13px}.btn.primary{background:var(--clay);border-color:var(--clay);color:#fff}.btn.danger{background:var(--red-soft);border-color:#e3b1a8;color:var(--red)}
+.sheet{position:absolute;left:10px;right:10px;bottom:76px;background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 10px 34px rgba(23,23,22,.16);display:none;z-index:4}.sheet.show{display:block}.sheet-handle{width:44px;height:4px;border-radius:9px;background:var(--line);margin:0 auto 14px}.sheet-title{font-family:var(--font-serif);font-size:20px;margin-bottom:6px}.sheet p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:12px}
+.menu-list{display:flex;flex-direction:column;gap:8px}.menu-item{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--paper-warm);border-radius:13px;padding:11px;font-size:13px}.menu-mark{width:28px;height:28px;border-radius:10px;background:var(--clay-soft);border:1px solid var(--clay-border);display:grid;place-items:center;color:var(--clay-dark);font-size:12px}
+.modal{position:absolute;inset:0;background:rgba(23,23,22,.38);display:none;align-items:center;justify-content:center;padding:24px;z-index:5}.modal.show{display:flex}.modal-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px;width:100%;box-shadow:var(--shadow-md)}.modal-card h3{font-family:var(--font-serif);font-size:21px;margin-bottom:7px}.modal-card p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:14px}
+.toast{position:absolute;left:20px;right:20px;bottom:88px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;font-size:13px;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;z-index:7}.toast.show{opacity:1;transform:translateY(0)}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:7px 8px 10px;z-index:3}.tab{border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:var(--muted)}.tab svg{width:19px;height:19px}.tab.active{background:var(--clay-soft);color:var(--clay-dark);font-weight:700}
+.profile{display:flex;gap:12px;align-items:center}.avatar{width:48px;height:48px;border-radius:16px;background:var(--olive-soft);border:1px solid var(--olive-border);display:grid;place-items:center;color:var(--olive-dark);font-weight:800}.progress{height:8px;border-radius:99px;background:var(--line-faint);overflow:hidden}.progress span{display:block;height:100%;background:var(--olive);border-radius:99px}.skeleton{display:grid;gap:8px}.sk{height:12px;border-radius:99px;background:linear-gradient(90deg,var(--line-faint),var(--paper-warm),var(--line-faint));background-size:200% 100%;animation:shimmer 1.4s infinite}.empty{text-align:center;padding:28px 18px}.empty-mark{width:52px;height:52px;margin:0 auto 12px;border-radius:18px;border:1px solid var(--line);background:var(--paper-warm);display:grid;place-items:center;font-family:var(--font-serif);font-size:26px;color:var(--clay-dark)}
+@keyframes shimmer{to{background-position:-200% 0}}
+@media(max-width:980px){.workspace{grid-template-columns:1fr;padding:18px;gap:24px}.copy h1{font-size:34px}.component-sheet{grid-template-columns:1fr 1fr}.phone-shell{height:800px;max-height:none}}
+@media(max-width:560px){.component-sheet{grid-template-columns:1fr}.phone-shell{height:780px}.workspace{padding:14px}}
 </style>
 </head>
 <body>
 <main class="workspace">
   <section class="copy">
-    <h1 data-t="headline">PagerCraft <span>手机端</span>组件范例</h1>
-    <p data-t="intro">一个完整的移动端纸感 App 原型：状态栏、顶部栏、底部导航、分段控件、列表卡片、搜索、底部操作面板和 toast 都可以直接复用。</p>
+    <h1 data-t="headline">PagerCraft <span>Mobile</span> Kit</h1>
+    <p data-t="intro">A richer mobile component showcase for paper-style apps: navigation, cards, forms, selectors, sheets, modal, toast, loading, empty states, and profile/detail patterns.</p>
     <div class="tags">
-      <span class="tag">iOS shell</span><span class="tag">Bottom tabs</span><span class="tag">Action sheet</span><span class="tag">Bilingual</span>
+      <span class="tag">iOS shell</span><span class="tag">Forms</span><span class="tag">Bottom sheet</span><span class="tag">States</span><span class="tag">Bilingual</span>
     </div>
     <div class="lang-toggle">
       <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
     </div>
-    <div class="component-sheet">
-      <div class="component"><strong data-t="c1">移动首页</strong><span data-t="c1d">hero 卡片、双指标、任务列表，适合 App 第一屏。</span></div>
-      <div class="component"><strong data-t="c2">列表与搜索</strong><span data-t="c2d">搜索框、分段控件、状态列表，适合内容/订单/任务。</span></div>
-      <div class="component"><strong data-t="c3">底部导航</strong><span data-t="c3d">4 tab 结构，保留安全区和清晰选中态。</span></div>
-      <div class="component"><strong data-t="c4">底部操作面板</strong><span data-t="c4d">适合详情操作、筛选器、确认流程。</span></div>
-    </div>
+    <div class="component-sheet" id="component-sheet"></div>
   </section>
 
   <section class="phone-shell" aria-label="Mobile app preview">
@@ -68,20 +71,16 @@ button,input{font:inherit}button{border:0;background:none;cursor:pointer;color:i
       <div class="notch"></div>
       <div class="status"><span>9:41</span><span>5G  100%</span></div>
       <div class="appbar">
-        <button class="icon-btn" onclick="showToast('menu')">☰</button>
+        <button class="icon-btn" onclick="openSheet('menu')" aria-label="Menu">☰</button>
         <div class="app-title">PaperKit</div>
-        <button class="icon-btn" onclick="toggleSheet()">＋</button>
+        <button class="icon-btn" onclick="openSheet('create')" aria-label="Create">＋</button>
       </div>
-      <section class="screen active" id="home"></section>
-      <section class="screen" id="tasks"></section>
-      <section class="screen" id="insights"></section>
-      <section class="screen" id="settings"></section>
-      <div class="sheet" id="sheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" data-t="sheet_title">新建计划</div>
-        <p data-t="sheet_body">底部面板适合承载移动端的二级操作，不打断主流程，也不会把按钮挤进顶部栏。</p>
-        <div class="actions"><button class="btn" onclick="toggleSheet()" data-t="cancel">取消</button><button class="btn primary" onclick="confirmSheet()" data-t="confirm">确认</button></div>
-      </div>
+      <section class="screen active" id="overview"></section>
+      <section class="screen" id="forms"></section>
+      <section class="screen" id="overlays"></section>
+      <section class="screen" id="states"></section>
+      <div class="sheet" id="sheet"></div>
+      <div class="modal" id="modal" onclick="closeModal(event)"></div>
       <div class="toast" id="toast">Done</div>
       <nav class="tabbar" id="tabbar"></nav>
     </div>
@@ -89,29 +88,58 @@ button,input{font:inherit}button{border:0;background:none;cursor:pointer;color:i
 </main>
 <script>
 const COPY={
- zh:{headline:'PagerCraft 手机端组件范例',intro:'一个完整的移动端纸感 App 原型：状态栏、顶部栏、底部导航、分段控件、列表卡片、搜索、底部操作面板和 toast 都可以直接复用。',c1:'移动首页',c1d:'hero 卡片、双指标、任务列表，适合 App 第一屏。',c2:'列表与搜索',c2d:'搜索框、分段控件、状态列表，适合内容/订单/任务。',c3:'底部导航',c3d:'4 tab 结构，保留安全区和清晰选中态。',c4:'底部操作面板',c4d:'适合详情操作、筛选器、确认流程。',sheet_title:'新建计划',sheet_body:'底部面板适合承载移动端的二级操作，不打断主流程，也不会把按钮挤进顶部栏。',cancel:'取消',confirm:'确认',confirmed:'已创建计划',menu:'菜单已打开',tabs:['首页','任务','洞察','设置'],hero:'今天的学习节奏',hero_body:'保持温和但明确的节奏：先完成高优先级任务，再处理长尾材料。',m1:'已完成',m2:'专注分钟',section:'今日事项',seg:['全部','重要','已完成'],search:'搜索任务…',items:[['备课','完成函数图像课件的最后校对'],['题库','复查 18 道选择题的解析来源'],['家长沟通','整理本周学习报告摘要'],['产品','确认移动端底部导航文案']],insight:'转化洞察',settings:'偏好设置'},
- en:{headline:'PagerCraft Mobile Component Example',intro:'A complete mobile paper-style app prototype: status bar, top app bar, bottom tabs, segmented control, list cards, search, bottom sheet, and toast are all reusable.',c1:'Mobile home',c1d:'Hero card, paired metrics, and task list for the first screen.',c2:'List and search',c2d:'Search, segmented control, and status list for content, orders, or tasks.',c3:'Bottom navigation',c3d:'Four-tab structure with safe spacing and clear selected state.',c4:'Bottom sheet',c4d:'Useful for detail actions, filters, and confirmations.',sheet_title:'Create Plan',sheet_body:'Bottom sheets carry secondary mobile actions without interrupting the main flow or crowding the top bar.',cancel:'Cancel',confirm:'Confirm',confirmed:'Plan created',menu:'Menu opened',tabs:['Home','Tasks','Insights','Settings'],hero:'Today’s working rhythm',hero_body:'Keep the pace warm but clear: finish high-priority work first, then handle long-tail material.',m1:'Completed',m2:'Focus min',section:'Today',seg:['All','Important','Done'],search:'Search tasks…',items:[['Lesson','Finalize the function graph courseware'],['Question bank','Review sources for 18 multiple-choice explanations'],['Parent note','Draft this week’s learning report summary'],['Product','Confirm mobile bottom navigation copy']],insight:'Conversion Insight',settings:'Preferences'}
+ zh:{
+  headline:'PagerCraft 手机端组件库',intro:'更完整的移动端纸感 App 组件范例：导航、卡片、表单、选择器、底部面板、弹窗、toast、加载、空状态、个人资料和详情模式。',
+  components:[['导航骨架','状态栏、顶部栏、底部 Tab、滚动内容区。'],['Hero 卡片','首页主信息、行动提示和上下文说明。'],['指标卡','两列 KPI、进度条、趋势标识。'],['列表卡片','任务、订单、内容流、详情入口。'],['搜索与筛选','搜索框、分段控件、横向 chips。'],['表单控件','输入框、文本域、选择器、开关、步进器。'],['底部面板','菜单、筛选、快速新建、确认操作。'],['弹窗 Modal','危险操作、二次确认、短说明。'],['Toast','底部反馈，不抢点击。'],['加载状态','Skeleton、进度条、后台处理中。'],['空状态','无数据、无结果、重置动作。'],['资料卡','头像、会员状态、偏好与详情摘要。']],
+  tabs:['总览','表单','浮层','状态'],overview:'移动组件总览',overviewBody:'这不是缩小版桌面 UI，而是面向拇指操作、窄屏阅读和底部动线重新组织的组件集合。',m1:'组件',m2:'交互',today:'今日工作流',chips:['全部','重要','内容','订单','学习'],items:[['备课','完成函数图像课件的最后校对','高'],['题库','复查 18 道选择题的解析来源','中'],['报告','生成本周学习摘要','低']],profile:'资料卡',profileBody:'会员 · 已同步 · 3 个偏好已启用',forms:'表单与选择器',name:'项目名称',note:'备注',select:'优先级',placeholder:'输入内容…',toggle:'消息提醒',stepper:'每日目标',slider:'专注强度',save:'保存',saved:'已保存',overlays:'浮层与临时操作',sheetCreate:'新建计划',sheetFilter:'筛选条件',sheetMenu:'快捷菜单',openCreate:'打开新建面板',openFilter:'打开筛选面板',openMenu:'打开菜单',openModal:'打开确认弹窗',modalTitle:'确认删除？',modalBody:'这个操作只是演示危险确认样式，不会真的删除数据。',cancel:'取消',confirm:'确认',confirmed:'已确认',states:'状态与反馈',loading:'加载中',empty:'暂无结果',emptyBody:'当前筛选条件没有内容，可以重置筛选或新建计划。',reset:'重置筛选',toastMsg:'操作已完成',menu:'菜单已打开',sheetBody:'底部面板适合承载移动端二级操作，保留主流程的上下文。',filterA:'只看重要',filterB:'本周到期',filterC:'包含已完成'
+ },
+ en:{
+  headline:'PagerCraft Mobile Component Kit',intro:'A richer mobile paper-style app component showcase: navigation, cards, forms, selectors, bottom sheets, modal, toast, loading, empty states, profile, and detail patterns.',
+  components:[['Navigation shell','Status bar, top app bar, bottom tabs, scrollable content.'],['Hero card','Primary first-screen context and action framing.'],['Metric cards','Two-column KPIs, progress, and trend labels.'],['List cards','Tasks, orders, feeds, and detail entry points.'],['Search and filters','Search field, segmented control, horizontal chips.'],['Form controls','Inputs, textarea, select, switches, and steppers.'],['Bottom sheet','Menu, filters, quick create, confirmations.'],['Modal','Danger actions, second confirmation, short copy.'],['Toast','Bottom feedback that does not intercept taps.'],['Loading state','Skeletons, progress bars, background work.'],['Empty state','No data, no results, and reset actions.'],['Profile card','Avatar, membership status, preferences, detail summary.']],
+  tabs:['Kit','Forms','Layers','States'],overview:'Mobile component overview',overviewBody:'This is not a shrunken desktop UI. It is organized for thumb reach, narrow reading, and bottom-driven mobile flows.',m1:'Components',m2:'Interactions',today:'Today workflow',chips:['All','Important','Content','Orders','Study'],items:[['Lesson','Finalize the function graph courseware','High'],['Question bank','Review sources for 18 explanations','Med'],['Report','Generate this week learning summary','Low']],profile:'Profile card',profileBody:'Member · Synced · 3 preferences enabled',forms:'Forms and selectors',name:'Project name',note:'Note',select:'Priority',placeholder:'Enter content…',toggle:'Notifications',stepper:'Daily goal',slider:'Focus intensity',save:'Save',saved:'Saved',overlays:'Layers and temporary actions',sheetCreate:'Create plan',sheetFilter:'Filters',sheetMenu:'Quick menu',openCreate:'Open create sheet',openFilter:'Open filter sheet',openMenu:'Open menu',openModal:'Open confirm modal',modalTitle:'Delete item?',modalBody:'This only demonstrates destructive confirmation style. No real data will be deleted.',cancel:'Cancel',confirm:'Confirm',confirmed:'Confirmed',states:'States and feedback',loading:'Loading',empty:'No results',emptyBody:'This filter has no content. Reset filters or create a new plan.',reset:'Reset filters',toastMsg:'Action completed',menu:'Menu opened',sheetBody:'Bottom sheets carry secondary mobile actions while preserving the main-flow context.',filterA:'Important only',filterB:'Due this week',filterC:'Include done'
+ }
 };
-let LANG='zh', active='home', seg=0;
+let LANG='zh', active='overview', seg=0, chip=0, goal=3, intensity=62, notify=true;
 function t(k){return COPY[LANG][k]||k}
 function setLang(l){LANG=l;render();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===LANG))}
 function setTab(id){active=id;render()}
 function setSeg(i){seg=i;render()}
-function icon(i){return ['<path d="M3 9l7-6 7 6v8H3z" fill="none" stroke="currentColor" stroke-width="1.6"/>','<path d="M5 4h10v12H5zM7 8h6M7 11h6" fill="none" stroke="currentColor" stroke-width="1.6"/>','<path d="M4 14l4-4 3 2 5-7" fill="none" stroke="currentColor" stroke-width="1.8"/>','<circle cx="10" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2" stroke="currentColor" stroke-width="1.6"/>'][i]}
+function setChip(i){chip=i;render()}
+function setGoal(delta){goal=Math.max(1,Math.min(9,goal+delta));render()}
+function setIntensity(v){intensity=v;document.getElementById('range-value').textContent=v+'%'}
+function toggleNotify(){notify=!notify;render()}
+function icon(i){return ['<path d="M3 9l7-6 7 6v8H3z" fill="none" stroke="currentColor" stroke-width="1.6"/>','<path d="M5 4h10v12H5zM7 8h6M7 11h6" fill="none" stroke="currentColor" stroke-width="1.6"/>','<path d="M5 15h10M7 5h6l2 6H5z" fill="none" stroke="currentColor" stroke-width="1.6"/>','<circle cx="10" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2" stroke="currentColor" stroke-width="1.6"/>'][i]}
 function render(){
  document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
- const home=document.getElementById('home'),tasks=document.getElementById('tasks'),insights=document.getElementById('insights'),settings=document.getElementById('settings');
- home.innerHTML=`<div class="hero-card"><div class="hero-kicker">PaperKit</div><div class="hero-title">${t('hero')}</div><div class="hero-body">${t('hero_body')}</div></div><div class="metric-row"><div class="metric"><b>7/9</b><span>${t('m1')}</span></div><div class="metric"><b>128</b><span>${t('m2')}</span></div></div><h2 style="font-family:var(--font-serif);font-size:22px;margin:6px 0 12px">${t('section')}</h2>${listHtml(COPY[LANG].items.slice(0,3))}`;
- tasks.innerHTML=`<input class="search" placeholder="${t('search')}" oninput="filterTasks(this.value)"><div class="seg">${COPY[LANG].seg.map((s,i)=>`<button class="${i===seg?'active':''}" onclick="setSeg(${i})">${s}</button>`).join('')}</div><div id="task-list">${listHtml(COPY[LANG].items)}</div>`;
- insights.innerHTML=`<div class="hero-card"><div class="hero-kicker">${t('insight')}</div><div class="hero-title">38%</div><div class="hero-body">${LANG==='zh'?'推荐渠道本周贡献最高，适合在下个版本强化分享入口。':'Referral is the strongest channel this week. Consider strengthening sharing entry points in the next version.'}</div></div>${listHtml([[LANG==='zh'?'渠道':'Channel',LANG==='zh'?'推荐 > 自然搜索 > 付费投放':'Referral > Organic > Paid'],[LANG==='zh'?'风险':'Risk',LANG==='zh'?'社媒来源质量偏低，需要降噪。':'Social traffic quality is lower and needs cleanup.']])}`;
- settings.innerHTML=`<div class="hero-card"><div class="hero-kicker">${t('settings')}</div><div class="hero-title">${LANG==='zh'?'保持克制':'Keep it restrained'}</div><div class="hero-body">${LANG==='zh'?'移动端同样使用细边框、暖纸色和明确交互态，避免把桌面卡片直接缩小。':'Mobile keeps fine borders, paper warmth, and clear interaction states instead of shrinking desktop cards.'}</div></div>${listHtml([[LANG==='zh'?'通知':'Notifications',LANG==='zh'?'每日 09:00 汇总':'Daily digest at 09:00'],[LANG==='zh'?'语言':'Language',LANG==='zh'?'中文 / English':'Chinese / English']])}`;
+ document.getElementById('component-sheet').innerHTML=COPY[LANG].components.map(c=>`<div class="component"><strong>${c[0]}</strong><span>${c[1]}</span></div>`).join('');
+ renderOverview();renderForms();renderOverlays();renderStates();
  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===active));
- document.getElementById('tabbar').innerHTML=COPY[LANG].tabs.map((label,i)=>{const ids=['home','tasks','insights','settings'];return `<button class="tab ${active===ids[i]?'active':''}" onclick="setTab('${ids[i]}')"><svg viewBox="0 0 20 20">${icon(i)}</svg><span>${label}</span></button>`}).join('');
+ const ids=['overview','forms','overlays','states'];
+ document.getElementById('tabbar').innerHTML=COPY[LANG].tabs.map((label,i)=>`<button class="tab ${active===ids[i]?'active':''}" onclick="setTab('${ids[i]}')"><svg viewBox="0 0 20 20">${icon(i)}</svg><span>${label}</span></button>`).join('');
 }
-function listHtml(items){return `<div class="list">${items.map((it,i)=>`<div class="item"><div class="dot">${i+1}</div><div><h3>${it[0]}</h3><p>${it[1]}</p></div></div>`).join('')}</div>`}
-function filterTasks(q){const items=COPY[LANG].items.filter(it=>(it[0]+it[1]).toLowerCase().includes(q.toLowerCase()));document.getElementById('task-list').innerHTML=listHtml(items)}
-function toggleSheet(){document.getElementById('sheet').classList.toggle('show')}
-function confirmSheet(){toggleSheet();showToast('confirmed')}
+function renderOverview(){
+ document.getElementById('overview').innerHTML=`<div class="section-label">PaperKit</div><div class="hero-card"><div class="hero-title">${t('overview')}</div><div class="hero-body">${t('overviewBody')}</div></div><div class="metric-row"><div class="metric"><b>12</b><span>${t('m1')}</span></div><div class="metric"><b>18</b><span>${t('m2')}</span></div></div><div class="chips">${COPY[LANG].chips.map((c,i)=>`<button class="chip ${i===chip?'active':''}" onclick="setChip(${i})">${c}</button>`).join('')}</div><div class="section-title">${t('today')}</div>${listHtml(COPY[LANG].items)}<div class="panel profile" style="margin-top:12px"><div class="avatar">PK</div><div><h3>${t('profile')}</h3><p class="muted">${t('profileBody')}</p><div class="progress" style="margin-top:9px"><span style="width:72%"></span></div></div></div>`;
+}
+function renderForms(){
+ document.getElementById('forms').innerHTML=`<div class="section-label">${t('forms')}</div><div class="panel"><div class="form-grid"><div class="form-row"><label class="form-label">${t('name')}</label><input class="field" value="PaperKit Sprint"></div><div class="form-row"><label class="form-label">${t('note')}</label><textarea placeholder="${t('placeholder')}">${LANG==='zh'?'补充移动端组件状态和交互示例。':'Add mobile component states and interaction examples.'}</textarea></div><div class="form-row"><label class="form-label">${t('select')}</label><select><option>${COPY[LANG].items[0][2]}</option><option>${COPY[LANG].items[1][2]}</option><option>${COPY[LANG].items[2][2]}</option></select></div></div></div><div class="switch-row"><div><b>${t('toggle')}</b><p class="muted">${LANG==='zh'?'用于设置项、权限和偏好。':'For settings, permissions, and preferences.'}</p></div><button class="switch ${notify?'on':''}" onclick="toggleNotify()"><span></span></button></div><div class="switch-row"><div><b>${t('stepper')}</b><p class="muted">${LANG==='zh'?'适合数量、天数、人数。':'For quantity, days, and seats.'}</p></div><div class="stepper"><button onclick="setGoal(-1)">-</button><strong>${goal}</strong><button onclick="setGoal(1)">+</button></div></div><div class="panel"><label class="form-label">${t('slider')} <span id="range-value">${intensity}%</span></label><input class="range" type="range" min="0" max="100" value="${intensity}" oninput="setIntensity(this.value)"></div><button class="btn primary" onclick="showToast('saved')">${t('save')}</button>`;
+}
+function renderOverlays(){
+ document.getElementById('overlays').innerHTML=`<div class="section-label">${t('overlays')}</div><div class="panel"><p class="muted">${t('sheetBody')}</p><div class="actions" style="margin-top:12px"><button class="btn primary" onclick="openSheet('create')">${t('openCreate')}</button><button class="btn" onclick="openSheet('filter')">${t('openFilter')}</button><button class="btn" onclick="openSheet('menu')">${t('openMenu')}</button><button class="btn danger" onclick="openModal()">${t('openModal')}</button></div></div><div class="panel"><div class="section-title">${t('sheetMenu')}</div><div class="menu-list"><div class="menu-item"><span class="menu-mark">01</span>${LANG==='zh'?'复制摘要':'Copy summary'}</div><div class="menu-item"><span class="menu-mark">02</span>${LANG==='zh'?'导出记录':'Export records'}</div><div class="menu-item"><span class="menu-mark">03</span>${LANG==='zh'?'发送提醒':'Send reminder'}</div></div></div>`;
+}
+function renderStates(){
+ document.getElementById('states').innerHTML=`<div class="section-label">${t('states')}</div><div class="panel"><b>${t('loading')}</b><div class="skeleton" style="margin-top:12px"><div class="sk" style="width:92%"></div><div class="sk" style="width:76%"></div><div class="sk" style="width:54%"></div></div><div class="progress" style="margin-top:14px"><span style="width:64%"></span></div></div><div class="panel empty"><div class="empty-mark">0</div><h3>${t('empty')}</h3><p class="muted">${t('emptyBody')}</p><button class="btn" style="margin-top:12px" onclick="showToast('toastMsg')">${t('reset')}</button></div>${listHtml([[LANG==='zh'?'成功状态':'Success state',LANG==='zh'?'同步完成，记录已保存。':'Sync completed and records saved.','OK'],[LANG==='zh'?'警告状态':'Warning state',LANG==='zh'?'还剩 2 项需要补充。':'Two items still need attention.','!']])}`;
+}
+function listHtml(items){return `<div class="list">${items.map((it,i)=>`<div class="item"><div class="dot">${i+1}</div><div><h3>${it[0]}</h3><p>${it[1]}</p></div><span class="right">${it[2]||''}</span></div>`).join('')}</div>`}
+function openSheet(type){
+ const title={create:t('sheetCreate'),filter:t('sheetFilter'),menu:t('sheetMenu')}[type]||t('sheetCreate');
+ const body=type==='filter'?`<div class="menu-list"><label class="menu-item"><input type="checkbox" checked> ${t('filterA')}</label><label class="menu-item"><input type="checkbox"> ${t('filterB')}</label><label class="menu-item"><input type="checkbox"> ${t('filterC')}</label></div>`:type==='menu'?`<div class="menu-list"><button class="menu-item" onclick="showToast('menu')"><span class="menu-mark">01</span>${LANG==='zh'?'打开资料':'Open profile'}</button><button class="menu-item" onclick="showToast('toastMsg')"><span class="menu-mark">02</span>${LANG==='zh'?'复制链接':'Copy link'}</button></div>`:`<p>${t('sheetBody')}</p><input class="field" value="${LANG==='zh'?'新计划':'New plan'}">`;
+ document.getElementById('sheet').innerHTML=`<div class="sheet-handle"></div><div class="sheet-title">${title}</div>${body}<div class="actions" style="margin-top:12px"><button class="btn" onclick="toggleSheet(false)">${t('cancel')}</button><button class="btn primary" onclick="confirmSheet()">${t('confirm')}</button></div>`;
+ toggleSheet(true);
+}
+function toggleSheet(force){document.getElementById('sheet').classList.toggle('show',force)}
+function confirmSheet(){toggleSheet(false);showToast('confirmed')}
+function openModal(){document.getElementById('modal').innerHTML=`<div class="modal-card" onclick="event.stopPropagation()"><h3>${t('modalTitle')}</h3><p>${t('modalBody')}</p><div class="actions"><button class="btn" onclick="closeModal()">${t('cancel')}</button><button class="btn danger" onclick="closeModal();showToast('confirmed')">${t('confirm')}</button></div></div>`;document.getElementById('modal').classList.add('show')}
+function closeModal(e){if(e&&e.target.id!=='modal')return;document.getElementById('modal').classList.remove('show')}
 function showToast(key){const el=document.getElementById('toast');el.textContent=t(key);el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
 render();
 </script>
